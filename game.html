@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Field Mice - 21</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/scene.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/cards.css">
+</head>
+<body class="scene-bg">
+  <div id="game-container">
+
+    <button id="pause-btn">Menu</button>
+
+    <div class="music-chrome">
+      <button type="button" id="music-mute-top" class="music-mute-top" aria-label="Mute music">🔊</button>
+      <div id="music-now-playing" class="music-now-playing" role="status" aria-live="polite" aria-label="Now playing">
+        <img id="music-np-thumb" class="music-np-thumb" src="Music/Change My Style.jpg" alt="" draggable="false">
+        <div class="music-np-text">
+          <span class="music-np-label">Now Playing</span>
+          <span id="music-np-title" class="music-np-title">Change My Style</span>
+          <span id="music-np-artist" class="music-np-artist">Glow Machine</span>
+        </div>
+      </div>
+    </div>
+
+    <div id="game-toast" class="game-toast hidden" role="status" aria-live="polite"></div>
+    <p id="online-match-badge" class="online-match-badge hidden" aria-live="polite"></p>
+
+    <!-- Turn banner + clock: centered strip, clear of Menu / music -->
+    <div class="turn-header-wrap">
+      <div class="turn-header">
+        <div id="turn-banner" class="turn-banner your-turn">Your Turn</div>
+        <div id="turn-timer-clock" class="turn-timer-clock hidden" aria-live="polite">
+          <svg class="turn-clock-svg" viewBox="0 0 48 48" aria-hidden="true">
+            <circle class="turn-clock-ring-bg" cx="24" cy="24" r="18" fill="none" />
+            <circle id="turn-clock-progress" class="turn-clock-ring" cx="24" cy="24" r="18" fill="none" transform="rotate(-90 24 24)" />
+          </svg>
+          <span id="turn-timer-text" class="turn-clock-num">25</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Table wrapper for 3D perspective -->
+    <div id="table-wrap" class="table-wrap">
+    <div id="opponent-fan-area">
+      <div class="opp-trump-stack">
+        <span class="opp-trump-label">Enemy trumps</span>
+        <div id="opponent-trump-fan" class="opp-fan"></div>
+      </div>
+    </div>
+    <div id="game-board">
+
+      <!-- Left: profiles + shop -->
+      <div id="left-col">
+        <div class="profile-block opponent-profile">
+          <div class="profile-avatar">
+            <img src="assets/pfp-opponent.png" alt="Opponent" width="88" height="88" draggable="false">
+          </div>
+          <p id="opponent-name" class="profile-name">Opponent</p>
+          <div id="opponent-lives" class="lives-dots"></div>
+        </div>
+
+        <div id="active-trumps" class="active-trumps">
+          <button type="button" id="shop-btn" class="shop-icon-btn hidden" title="Shop" aria-label="Open shop">
+            <svg class="shop-icon-svg" viewBox="0 0 24 24" aria-hidden="true">
+              <path fill="currentColor" d="M4 9h16l-1.2-5.4H5.2L4 9zm0 2v9h16v-9H4zm2.5 2h2v5h-2v-5zm4 0h2v5h-2v-5zm4 0h2v5h-2v-5z"/>
+            </svg>
+            <span class="shop-label">Shop</span>
+          </button>
+        </div>
+
+        <div class="profile-block player-profile">
+          <div class="profile-avatar">
+            <img src="assets/pfp-player.png" alt="You" width="88" height="88" draggable="false">
+          </div>
+          <p id="player-name" class="profile-name">You</p>
+          <div id="player-lives" class="lives-dots"></div>
+        </div>
+      </div>
+
+      <!-- Center: numbered cards -->
+      <div id="center-col">
+        <div id="opponent-cards" class="card-row"></div>
+        <div id="player-cards" class="card-row"></div>
+      </div>
+
+      <!-- Right: scores + deck -->
+      <div id="right-col">
+        <div class="score-box">
+          <span id="opponent-score" class="score-text">0+?/21</span>
+        </div>
+        <div id="deck-area" class="deck-area">
+          <div class="deck-visual pigeon-deck">
+            <div class="deck-thickness" aria-hidden="true"></div>
+            <div class="deck-face" role="img" aria-label="Draw pile">
+              <img class="deck-back-img" src="assets/cards/card-back.png" width="288" height="403" alt="" draggable="false">
+            </div>
+          </div>
+          <span id="deck-count" class="deck-count">11</span>
+        </div>
+        <div id="action-bar" class="action-bar">
+          <button type="button" id="btn-draw" class="game-btn draw-btn">Draw</button>
+          <button type="button" id="btn-keep" class="game-btn keep-btn">Keep</button>
+        </div>
+        <div class="score-box">
+          <span id="player-score" class="score-text">0/21</span>
+        </div>
+      </div>
+
+      <!-- Player trumps live inside table surface -->
+      <div id="trump-hand-area">
+        <div id="trump-hand" class="trump-hand-fan"></div>
+      </div>
+    </div>
+
+    </div>
+
+  </div>
+
+  <!-- Overlays -->
+  <div id="overlay" class="overlay hidden">
+    <div id="overlay-content" class="overlay-box"></div>
+  </div>
+
+  <div id="trump-select-overlay" class="overlay hidden">
+    <div class="overlay-box">
+      <h2>Play a Trump Card</h2>
+      <div id="trump-select-cards" class="trump-select-grid"></div>
+      <button id="trump-cancel-btn" class="game-btn keep-btn">Cancel</button>
+    </div>
+  </div>
+
+
+  <div id="trump-use-overlay" class="overlay hidden">
+    <div class="overlay-box trump-use-box">
+      <div class="trump-use-preview">
+        <div class="trump-use-card card">
+          <img id="trump-use-img" src="assets/cards/trump-back.png" alt="" draggable="false">
+        </div>
+      </div>
+      <h2 id="trump-use-name"></h2>
+      <p id="trump-use-desc" class="trump-use-desc"></p>
+      <p id="trump-use-warning" class="trump-use-warning hidden"></p>
+      <div class="trump-use-actions">
+        <button type="button" id="trump-use-btn" class="game-btn draw-btn">Use Card</button>
+        <button type="button" id="trump-use-cancel-btn" class="game-btn keep-btn">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="target-select-overlay" class="overlay hidden">
+    <div class="overlay-box">
+      <h2 id="target-select-title">Select a card</h2>
+      <div id="target-select-cards" class="target-select-grid"></div>
+      <button id="target-cancel-btn" class="game-btn keep-btn">Cancel</button>
+    </div>
+  </div>
+
+  <div id="shop-overlay" class="overlay hidden">
+    <div class="overlay-box shop-overlay-box">
+      <h2>Shop</h2>
+      <p class="shop-subtitle">Spend lives to buy trump cards</p>
+      <div id="shop-overlay-cards" class="shop-overlay-grid"></div>
+      <button id="shop-close-btn" class="game-btn keep-btn">Skip</button>
+    </div>
+  </div>
+
+  <div id="pause-overlay" class="overlay hidden">
+    <div class="overlay-box">
+      <h2>Paused</h2>
+      <div class="pause-menu">
+        <div class="volume-section">
+          <div class="volume-row">
+            <span class="volume-label">Music</span>
+            <input type="range" id="music-volume" class="volume-slider" min="0" max="100" value="13">
+            <button id="music-mute-btn" class="mute-btn">🔊</button>
+          </div>
+          <div class="volume-row">
+            <span class="volume-label">SFX</span>
+            <input type="range" id="sfx-volume" class="volume-slider" min="0" max="100" value="70">
+            <button id="sfx-mute-btn" class="mute-btn">🔊</button>
+          </div>
+        </div>
+        <button class="game-btn draw-btn" id="resume-btn">Resume</button>
+        <button type="button" class="game-btn keep-btn" id="tutorial-btn">How to Play</button>
+        <button class="game-btn keep-btn" id="quit-btn">Quit to Lobby</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="trump-play-overlay" class="trump-play-overlay hidden" aria-hidden="true">
+    <div class="trump-play-backdrop"></div>
+    <div class="trump-play-card-wrap">
+      <div class="trump-play-card card">
+        <img class="trump-play-img" src="assets/cards/trump-back.png" alt="">
+      </div>
+      <div class="trump-play-info">
+        <div class="trump-play-name"></div>
+        <p class="trump-play-desc"></p>
+      </div>
+    </div>
+  </div>
+
+  <div id="tutorial-overlay" class="tutorial-overlay hidden" aria-hidden="true" role="dialog" aria-labelledby="tutorial-title">
+    <div id="tutorial-spotlight" class="tutorial-spotlight hidden" aria-hidden="true"></div>
+    <div id="tutorial-tooltip" class="tutorial-tooltip">
+      <p id="tutorial-step" class="tutorial-step">1 / 14</p>
+      <h2 id="tutorial-title" class="tutorial-title">Welcome</h2>
+      <p id="tutorial-body" class="tutorial-body"></p>
+      <div class="tutorial-actions">
+        <button type="button" id="tutorial-skip" class="tutorial-btn tutorial-btn--ghost">Skip</button>
+        <button type="button" id="tutorial-back" class="tutorial-btn tutorial-btn--ghost" disabled>Back</button>
+        <button type="button" id="tutorial-next" class="tutorial-btn tutorial-btn--primary">Next</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="card-viewer">
+    <span id="card-viewer-close">&times;</span>
+    <img id="card-viewer-img" src="" alt="Card">
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.1/dist/umd/supabase.min.js"></script>
+  <script type="module" src="js/game.js"></script>
+</body>
+</html>

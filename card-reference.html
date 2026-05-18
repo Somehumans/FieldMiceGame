@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>21 -- Card Art Reference Guide</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #1a1a1a;
+      color: #e0e0e0;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      padding: 40px 20px;
+      line-height: 1.6;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 2.5rem;
+      color: #f0c040;
+      margin-bottom: 10px;
+      letter-spacing: 2px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #888;
+      margin-bottom: 50px;
+      font-size: 0.95rem;
+    }
+
+    .section-title {
+      font-size: 1.8rem;
+      color: #f0c040;
+      text-align: center;
+      margin: 60px 0 30px;
+      border-bottom: 2px solid #333;
+      padding-bottom: 10px;
+    }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 30px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: #252525;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 2px solid #333;
+      transition: border-color 0.2s;
+    }
+
+    .card:hover {
+      border-color: #f0c040;
+    }
+
+    .card-number {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      background: #f0c040;
+      color: #1a1a1a;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 1.3rem;
+    }
+
+    .card-img-wrapper {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      overflow: hidden;
+      background: #111;
+    }
+
+    .card-img-wrapper img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .card-body {
+      padding: 18px 20px;
+    }
+
+    .card-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+
+    .card-scene {
+      color: #bbb;
+      font-size: 0.9rem;
+      margin-bottom: 10px;
+    }
+
+    .card-vibe {
+      color: #999;
+      font-size: 0.85rem;
+      font-style: italic;
+      margin-bottom: 10px;
+    }
+
+    .color-zone {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .color-dot {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      border: 1px solid #555;
+    }
+
+    .color-label {
+      font-size: 0.8rem;
+      color: #777;
+    }
+
+    .trump-section {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .trump-group-title {
+      font-size: 1.2rem;
+      color: #d4a0ff;
+      margin: 30px 0 15px;
+    }
+
+    .trump-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
+    }
+
+    .trump-card {
+      background: #252525;
+      border: 2px solid #444;
+      border-radius: 10px;
+      padding: 16px 20px;
+      transition: border-color 0.2s;
+    }
+
+    .trump-card:hover {
+      border-color: #d4a0ff;
+    }
+
+    .trump-name {
+      font-weight: 700;
+      font-size: 1rem;
+      color: #d4a0ff;
+      margin-bottom: 4px;
+    }
+
+    .trump-effect {
+      font-size: 0.85rem;
+      color: #aaa;
+      margin-bottom: 8px;
+    }
+
+    .trump-art {
+      font-size: 0.85rem;
+      color: #888;
+      font-style: italic;
+    }
+
+    .notes-section {
+      max-width: 800px;
+      margin: 60px auto 0;
+      background: #252525;
+      border-radius: 12px;
+      padding: 30px;
+      border: 2px solid #333;
+    }
+
+    .notes-section h3 {
+      color: #f0c040;
+      margin-bottom: 15px;
+    }
+
+    .notes-section ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .notes-section li {
+      padding: 6px 0;
+      color: #bbb;
+      font-size: 0.9rem;
+    }
+
+    .notes-section li::before {
+      content: "→ ";
+      color: #f0c040;
+    }
+
+    .notes-section li strong {
+      color: #e0e0e0;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>21</h1>
+  <p class="subtitle">Card Art Reference Guide -- Draw your own versions in a fun 2D illustrated style</p>
+
+  <h2 class="section-title">Number Cards (1 - 11)</h2>
+
+  <div class="cards-grid">
+
+    <div class="card">
+      <div class="card-img-wrapper">
+        <div class="card-number">1</div>
+        <img src="../../../.cursor/projects/c-Users-ray51-OneDrive-Desktop-21/assets/c__Users_ray51_AppData_Roaming_Cursor_User_workspaceStorage_720e85456e7c26449e23d815f7723f44_images_image-e89167f3-5eb8-42d7-b187-ce65e3e598d8.png" alt="Card 1 reference">
+      </div>
+      <div class="card-body">
+        <div class="card-title">Mouse on a Stick with Blueberry</div>
+        <div class="card-scene">A single field mouse perched on top of a stick, hugging a blueberry. Tiny, simple, peaceful.</div>
+        <div class="card-vibe">Minimal. One subject, one object. The quietest card in the deck.</div>
+        <div class="color-zone">
+          <div class="color-dot" style="background: #5b8fb9;"></div>
+          <div class="color-dot" style="background: #7ab87a;"></div>
+          <span class="color-label">Cool blue / soft green</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-img-wrapper">
+        <div class="card-number">2</div>
+        <img src="../../../.cursor/projects/c-Users-ray51-OneDrive-Desktop-21/assets/c__Users_ray51_AppData_Roaming_Cursor_User_workspaceStorage_720e85456e7c26449e23d815f7723f44_images_image-202549d8-15d1-470e-a7ae-e7781392b296.png" alt="Card 2 reference">
+      </div>
+      <div class="card-body">
+        <div class="card-title">Mouse Climbing a Yellow Tulip</div>
+        <div class="card-scene">Harvest mouse climbing a yellow tulip stem, peeking out from behind the leaf. Alert, curious.</div>
+        <div class="card-vibe">One flower, slightly more going on. Still clean and simple.</div>
+        <div class="color-zone">
+          <div class="color-dot" style="background: #f0d040;"></div>
+          <div class="color-dot" style="background: #5a9a5a;"></div>
+          <span class="color-label">Yellow / green</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-img-wrapper">
+        <div class="card-number">3</div>
+        <img src="../../../.cursor/projects/c-Users-ray51-OneDrive-Desktop-21/assets/c__Users_ray51_AppData_Roaming_Cursor_User_workspaceStorage_720e85456e7c26449e23d815f7723f44_images_image-a0322294-a1fd-437f-99ee-5f36a4ceca24.png" alt="Card 3 reference">
+      </div>
+      <div class="card-body">
+        <div class="card-title">Two Mice on a Drooping Tulip</div>
+        <div class="card-scene">Two mice on a drooping yellow tulip -- one perched on the stem, the other peeking out from inside the flower. The flower bends under their weight.</div>
+        <div class="card-vibe">First card with two subjects. Playful, a little mischievous.</div>
+        <div class="color-zone">
+          <div class="color-dot" style="background: #e8c830;"></div>
+          <div class="color-dot" style="background: #6aaa5a;"></div>
+          <span class="color-label">Yellow / warm green</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-img-wrapper">
+        <div class="card-number">4</div>
+        <img src="../../../.cursor/projects/c-Users-ray51-OneDrive-Desktop-21/assets/c__Users_ray51_AppData_Roaming_Cursor_User_workspaceStorage_720e85456e7c26449e23d815f7723f44_images_image-406c4971-eade-4257-ba23-aae7abd45390.png" alt="Card 4 reference">
+      </div>
+      <div class="card-body">
+        <div class="card-title">Mouse Hanging from Buttercup Branches</div>
+        <div class="card-scene">Mouse dangling by its tail from a branching stem with yellow buttercups. Mid-swing, acrobatic.</div>
+        <div class="card-vibe">Dynamic movement. Multiple flowers and branches. More action than earlier cards.</div>
+        <div class="color-zone">
+          <div class="color-dot" style="background: #5a9a5a;"></div>
+          <div class="color-dot" style="background: #e8d040;"></div>
+          <span class="color-label">Green / yellow</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-img-wrapper">
+        <div class="card-number">5</div>
+        <img src="../../../.cursor/projects/c-Users-ray51-OneDrive-Desktop-21/assets/c__Users_ray51_AppData_Roaming_Cursor_User_workspaceStorage_720e85456e7c26449e23d815f7723f44_images_image-70c3583d-003a-4327-ad64-514bf0e88583.png" alt="Card 5 reference">
+      </div>
+      <div class="card-body">
+        <div class="card-title">Dormouse Laughing on Yarrow</div>
+        <div class="card-scene">Dormouse sitting on top of a white yarrow flower cluster, mouth open in a laugh/yawn, paws spread wide. Pure joy.</div>
+        <div class="card-vibe">The midpoint card. Big personality. This will be the fan favorite.</div>
+        <div class="color-zone">
+          <div class="color-dot" style="background: #e8e8e8;"></div>
+          <div class="color-dot" style="background: #6aaa5a;"></div>
+          <div class="color-dot" style="background: #c88040;"></div>
+          <span class="color-label">White / warm green / orange fur</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-img-wrapper">
+        <div class="card-number">6</div>
+        <img src="../../../.cursor/projects/c-Users-ray51-OneDrive-Desktop-21/assets/c__Users_ray51_AppData_Roaming_Cursor_User_workspaceStorage_720e85456e7c26449e23d815f7723f44_images_image-b6fdbff0-831b-4e8f-80a4-dbc74ad63f6f.png" alt="Card 6 reference">
+      </div>
+      <div class="card-body">
+        <div class="card-title">Mouse Climbing Tall Buttercup Stems</div>
+        <div class="card-scene">Harvest mouse climbing tall buttercup stems against a bright blue sky. Multiple branching stems and flowers, scaling upward.</div>
+        <div class="card-vibe">Height, ambition, more environment visible. The scene feels bigger.</div>
+        <div class="color-zone">
+          <div class="color-dot" style="background: #5a8ac0;"></div>
+          <div class="color-dot" style="background: #e8d040;"></div>
+          <div class="color-dot" style="background: #5a9a5a;"></div>
+          <span class="color-label">Blue sky / yellow / green</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-img-wrapper">
+        <div class="card-number">7</div>
+        <img src="../../../.cursor/projects/c-Users-ray51-OneDrive-Desktop-21/assets/c__Users_ray51_AppData_Roaming_Cursor_User_workspaceStorage_720e85456e7c26449e23d815f7723f44_images_image-8357c5f2-ee44-42d0-a80e-d4385a352b76.png" alt="Card 7 reference">
+      </div>
+      <div class="card-body">
+        <div class="card-title">Mouse Among Billy Buttons (Dark)</div>
+        <div class="card-scene">Mouse perched among a forest of golden billy button / craspedia flowers against a black background. Lots of round golden orbs.</div>
+        <div class="card-vibe">Mood shift. Dark backdrop, golden spheres. Visual density increasing.</div>
+        <div class="color-zone">
+          <div class="color-dot" style="background: #d4a830;"></div>
+          <div class="color-dot" style="background: #1a1a1a;"></div>
+          <span class="color-label">Gold / black / dark</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-img-wrapper">
+        <div class="card-number">8</div>
+        <img src="../../../.cursor/projects/c-Users-ray51-OneDrive-Desktop-21/assets/c__Users_ray51_AppData_Roaming_Cursor_User_workspaceStorage_720e85456e7c26449e23d815f7723f44_images_image-712f39f5-f7f4-4963-bb74-87e77411c41c.png" alt="Card 8 reference">
+      </div>
+      <div class="card-body">
+        <div class="card-title">Mouse on Cherry Blossom Branch</div>
+        <div class="card-scene">Mouse sitting on a long cherry blossom branch with delicate white flowers stretching across the full width. Serene and elegant.</div>
+        <div class="card-vibe">Wide, graceful composition. Thorny branch with beauty. Calm before the storm.</div>
+        <div class="color-zone">
+          <div class="color-dot" style="background: #8ac090;"></div>
+          <div class="color-dot" style="background: #f0e8e0;"></div>
+          <div class="color-dot" style="background: #e8b8c0;"></div>
+          <span class="color-label">Soft green / white / pink tint</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-img-wrapper">
+        <div class="card-number">9</div>
+        <img src="../../../.cursor/projects/c-Users-ray51-OneDrive-Desktop-21/assets/c__Users_ray51_AppData_Roaming_Cursor_User_workspaceStorage_720e85456e7c26449e23d815f7723f44_images_image-c829d61c-d960-4a28-8daa-d3a488420faf.png" alt="Card 9 reference">
+      </div>
+      <div class="card-body">
+        <div class="card-title">Two Mice Meeting on Daffodils</div>
+        <div class="card-scene">Two mice face-to-face on daffodil stems, touching noses/paws. Big dramatic yellow flowers, warm moody background.</div>
+        <div class="card-vibe">Intimate, emotional. Large flowers dominate. High visual weight.</div>
+        <div class="color-zone">
+          <div class="color-dot" style="background: #d4a020;"></div>
+          <div class="color-dot" style="background: #8a6a40;"></div>
+          <span class="color-label">Deep yellow / warm brown</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-img-wrapper">
+        <div class="card-number">10</div>
+        <img src="../../../.cursor/projects/c-Users-ray51-OneDrive-Desktop-21/assets/c__Users_ray51_AppData_Roaming_Cursor_User_workspaceStorage_720e85456e7c26449e23d815f7723f44_images_image-458af0da-09a6-4ac7-884e-5e14080c66a5.png" alt="Card 10 reference">
+      </div>
+      <div class="card-body">
+        <div class="card-title">Three Mice on Hawthorn Berries</div>
+        <div class="card-scene">Three mice scrambling up a hawthorn branch loaded with red berries. Tails tangling everywhere. Crowded and chaotic.</div>
+        <div class="card-vibe">The busiest card. Three subjects, lots of berries, autumn leaves. Controlled chaos.</div>
+        <div class="color-zone">
+          <div class="color-dot" style="background: #c03030;"></div>
+          <div class="color-dot" style="background: #7a9a50;"></div>
+          <div class="color-dot" style="background: #8a6a40;"></div>
+          <span class="color-label">Red berries / autumn green / brown</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-img-wrapper">
+        <div class="card-number">11</div>
+        <img src="../../../.cursor/projects/c-Users-ray51-OneDrive-Desktop-21/assets/c__Users_ray51_AppData_Roaming_Cursor_User_workspaceStorage_720e85456e7c26449e23d815f7723f44_images_image-8681b319-c42d-4e73-b03d-3851db2444d2.png" alt="Card 11 reference">
+      </div>
+      <div class="card-body">
+        <div class="card-title">Three Mice on Thistle Heads</div>
+        <div class="card-scene">Three mice each sitting atop their own thistle/scabious seed head, standing tall like sentinels against a dreamy blue meadow backdrop.</div>
+        <div class="card-vibe">The crown card. Regal, panoramic. Tiny kings surveying their kingdom.</div>
+        <div class="color-zone">
+          <div class="color-dot" style="background: #6a8ac0;"></div>
+          <div class="color-dot" style="background: #5a9a5a;"></div>
+          <div class="color-dot" style="background: #8a7a60;"></div>
+          <span class="color-label">Blue / green meadow / earth tones</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <h2 class="section-title">Trump Cards (13 total)</h2>
+
+  <div class="trump-section">
+
+    <h3 class="trump-group-title">Modifier Cards</h3>
+    <div class="trump-grid">
+      <div class="trump-card">
+        <div class="trump-name">+1</div>
+        <div class="trump-effect">Adds 1 to opponent's total</div>
+        <div class="trump-art">Rat tossing a single flower at the opponent, looking smug</div>
+      </div>
+      <div class="trump-card">
+        <div class="trump-name">+2</div>
+        <div class="trump-effect">Adds 2 to opponent's total</div>
+        <div class="trump-art">Rat lobbing two flowers like little grenades</div>
+      </div>
+      <div class="trump-card">
+        <div class="trump-name">+3</div>
+        <div class="trump-effect">Adds 3 to opponent's total</div>
+        <div class="trump-art">Rat with an armful of three flowers, chucking them in a pile</div>
+      </div>
+      <div class="trump-card">
+        <div class="trump-name">-1</div>
+        <div class="trump-effect">Subtracts 1 from your total</div>
+        <div class="trump-art">Rat eating one flower petal, looking content</div>
+      </div>
+      <div class="trump-card">
+        <div class="trump-name">-2</div>
+        <div class="trump-effect">Subtracts 2 from your total</div>
+        <div class="trump-art">Rat nibbling through two flower stems with tiny teeth</div>
+      </div>
+      <div class="trump-card">
+        <div class="trump-name">-3</div>
+        <div class="trump-effect">Subtracts 3 from your total</div>
+        <div class="trump-art">Rat in a flower-petal fort, fully protected, cozy</div>
+      </div>
+    </div>
+
+    <h3 class="trump-group-title">Action Cards</h3>
+    <div class="trump-grid">
+      <div class="trump-card">
+        <div class="trump-name">Love Your Enemy</div>
+        <div class="trump-effect">Swap all face-up cards with opponent</div>
+        <div class="trump-art">Two rats swapping flower bouquets, looking confused but polite</div>
+      </div>
+      <div class="trump-card">
+        <div class="trump-name">Body Bag</div>
+        <div class="trump-effect">Remove one of opponent's face-up cards from play</div>
+        <div class="trump-art">Rat dragging a wilted flower away into a hole</div>
+      </div>
+      <div class="trump-card">
+        <div class="trump-name">Steal</div>
+        <div class="trump-effect">Take one of opponent's face-up cards for yourself</div>
+        <div class="trump-art">Rat in a tiny bandit mask sneaking off with a flower in its mouth</div>
+      </div>
+      <div class="trump-card">
+        <div class="trump-name">Transfer</div>
+        <div class="trump-effect">Give one of your face-up cards to opponent</div>
+        <div class="trump-art">Rat reluctantly pushing a flower toward the other side with its nose</div>
+      </div>
+      <div class="trump-card">
+        <div class="trump-name">Return</div>
+        <div class="trump-effect">Return one of your face-up cards to the deck</div>
+        <div class="trump-art">Rat carefully replanting a flower back into the ground</div>
+      </div>
+      <div class="trump-card">
+        <div class="trump-name">Speed Loader</div>
+        <div class="trump-effect">Draw 2 cards immediately</div>
+        <div class="trump-art">Rat running at full speed carrying two flowers, cheeks puffed, motion lines</div>
+      </div>
+      <div class="trump-card">
+        <div class="trump-name">Double Down</div>
+        <div class="trump-effect">Stakes x2 this round (loser loses 2 lives)</div>
+        <div class="trump-art">Two rats back-to-back looking serious, standing on a pile of flowers</div>
+      </div>
+      <div class="trump-card">
+        <div class="trump-name">Change</div>
+        <div class="trump-effect">Change the target number from 21</div>
+        <div class="trump-art">Rat holding a shapeshifting flower -- half daisy, half rose, glitchy vibes</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="notes-section">
+    <h3>Design Notes</h3>
+    <ul>
+      <li><strong>Number cards:</strong> Bold number in top-left and bottom-right corners</li>
+      <li><strong>Trump cards:</strong> Gold/holographic border to distinguish from number cards, card name at top, tiny effect text at bottom</li>
+      <li><strong>All cards:</strong> Thick black outlines, flat colors with minimal shading, same border/frame shape</li>
+      <li><strong>Card back:</strong> Sleeping rat curled up in a closed flower bud, dark background, "21" watermark</li>
+      <li><strong>Style:</strong> Fun 2D illustrated, chunky bold typography, splatter/spray paint textures</li>
+      <li><strong>Dimensions:</strong> Recommend drawing at 750 x 1050px (standard card ratio 5:7)</li>
+      <li><strong>File format:</strong> Save as PNG with transparency, name them: card-1.png through card-11.png, trump-plus1.png, trump-steal.png, etc.</li>
+      <li><strong>Card back file:</strong> card-back.png</li>
+    </ul>
+  </div>
+
+</body>
+</html>
