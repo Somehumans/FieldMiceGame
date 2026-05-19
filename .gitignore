@@ -1,0 +1,16 @@
+# Unused duplicates / exports (game uses assets/)
+Untitled_Artwork*.png
+pfp1.png
+pfp2.png
+
+# Source art folder (copies live in assets/cards/)
+New-mice-cards/
+
+# Backups
+*.bak
+*-opt.png
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.log

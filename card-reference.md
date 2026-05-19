@@ -7,6 +7,7 @@ All reference photos are in the assets folder. Draw your own versions of these i
 ## Number Cards
 
 ### Card 1 -- Mouse on a Stick with Blueberry
+
 ![Card 1](../../../.cursor/projects/c-Users-ray51-OneDrive-Desktop-21/assets/c__Users_ray51_AppData_Roaming_Cursor_User_workspaceStorage_720e85456e7c26449e23d815f7723f44_images_image-e89167f3-5eb8-42d7-b187-ce65e3e598d8.png)
 
 **Scene:** A single field mouse perched on top of a stick, hugging a blueberry. Tiny, simple, peaceful.
@@ -16,6 +17,7 @@ All reference photos are in the assets folder. Draw your own versions of these i
 ---
 
 ### Card 2 -- Mouse Climbing a Yellow Tulip
+
 ![Card 2](../../../.cursor/projects/c-Users-ray51-OneDrive-Desktop-21/assets/c__Users_ray51_AppData_Roaming_Cursor_User_workspaceStorage_720e85456e7c26449e23d815f7723f44_images_image-202549d8-15d1-470e-a7ae-e7781392b296.png)
 
 **Scene:** Harvest mouse climbing a yellow tulip stem, peeking out from behind the leaf. Alert, curious.
@@ -25,6 +27,7 @@ All reference photos are in the assets folder. Draw your own versions of these i
 ---
 
 ### Card 3 -- Two Mice on a Drooping Tulip
+
 ![Card 3](../../../.cursor/projects/c-Users-ray51-OneDrive-Desktop-21/assets/c__Users_ray51_AppData_Roaming_Cursor_User_workspaceStorage_720e85456e7c26449e23d815f7723f44_images_image-a0322294-a1fd-437f-99ee-5f36a4ceca24.png)
 
 **Scene:** Two mice on a drooping yellow tulip -- one perched on the stem, the other peeking out from inside the flower. The flower bends under their weight.
@@ -34,6 +37,7 @@ All reference photos are in the assets folder. Draw your own versions of these i
 ---
 
 ### Card 4 -- Mouse Hanging from Buttercup Branches
+
 ![Card 4](../../../.cursor/projects/c-Users-ray51-OneDrive-Desktop-21/assets/c__Users_ray51_AppData_Roaming_Cursor_User_workspaceStorage_720e85456e7c26449e23d815f7723f44_images_image-406c4971-eade-4257-ba23-aae7abd45390.png)
 
 **Scene:** Mouse dangling by its tail from a branching stem with yellow buttercups. Mid-swing, acrobatic.
@@ -43,6 +47,7 @@ All reference photos are in the assets folder. Draw your own versions of these i
 ---
 
 ### Card 5 -- Dormouse Laughing on Yarrow
+
 ![Card 5](../../../.cursor/projects/c-Users-ray51-OneDrive-Desktop-21/assets/c__Users_ray51_AppData_Roaming_Cursor_User_workspaceStorage_720e85456e7c26449e23d815f7723f44_images_image-70c3583d-003a-4327-ad64-514bf0e88583.png)
 
 **Scene:** Dormouse sitting on top of a white yarrow flower cluster, mouth open in a laugh/yawn, paws spread wide. Pure joy.
@@ -52,6 +57,7 @@ All reference photos are in the assets folder. Draw your own versions of these i
 ---
 
 ### Card 6 -- Mouse Climbing Tall Buttercup Stems
+
 ![Card 6](../../../.cursor/projects/c-Users-ray51-OneDrive-Desktop-21/assets/c__Users_ray51_AppData_Roaming_Cursor_User_workspaceStorage_720e85456e7c26449e23d815f7723f44_images_image-b6fdbff0-831b-4e8f-80a4-dbc74ad63f6f.png)
 
 **Scene:** Harvest mouse climbing tall buttercup stems against a bright blue sky. Multiple branching stems and flowers, scaling upward.
@@ -61,6 +67,7 @@ All reference photos are in the assets folder. Draw your own versions of these i
 ---
 
 ### Card 7 -- Mouse Among Billy Buttons (Dark)
+
 ![Card 7](../../../.cursor/projects/c-Users-ray51-OneDrive-Desktop-21/assets/c__Users_ray51_AppData_Roaming_Cursor_User_workspaceStorage_720e85456e7c26449e23d815f7723f44_images_image-8357c5f2-ee44-42d0-a80e-d4385a352b76.png)
 
 **Scene:** Mouse perched among a forest of golden billy button / craspedia flowers against a black background. Lots of round golden orbs.
@@ -70,6 +77,7 @@ All reference photos are in the assets folder. Draw your own versions of these i
 ---
 
 ### Card 8 -- Mouse on Cherry Blossom Branch
+
 ![Card 8](../../../.cursor/projects/c-Users-ray51-OneDrive-Desktop-21/assets/c__Users_ray51_AppData_Roaming_Cursor_User_workspaceStorage_720e85456e7c26449e23d815f7723f44_images_image-712f39f5-f7f4-4963-bb74-87e77411c41c.png)
 
 **Scene:** Mouse sitting on a long cherry blossom branch with delicate white flowers stretching across the full width. Serene and elegant.
@@ -79,6 +87,7 @@ All reference photos are in the assets folder. Draw your own versions of these i
 ---
 
 ### Card 9 -- Two Mice Meeting on Daffodils
+
 ![Card 9](../../../.cursor/projects/c-Users-ray51-OneDrive-Desktop-21/assets/c__Users_ray51_AppData_Roaming_Cursor_User_workspaceStorage_720e85456e7c26449e23d815f7723f44_images_image-c829d61c-d960-4a28-8daa-d3a488420faf.png)
 
 **Scene:** Two mice face-to-face on daffodil stems, touching noses/paws. Big dramatic yellow flowers, warm moody background.
@@ -88,6 +97,7 @@ All reference photos are in the assets folder. Draw your own versions of these i
 ---
 
 ### Card 10 -- Three Mice on Hawthorn Berries
+
 ![Card 10](../../../.cursor/projects/c-Users-ray51-OneDrive-Desktop-21/assets/c__Users_ray51_AppData_Roaming_Cursor_User_workspaceStorage_720e85456e7c26449e23d815f7723f44_images_image-458af0da-09a6-4ac7-884e-5e14080c66a5.png)
 
 **Scene:** Three mice scrambling up a hawthorn branch loaded with red berries. Tails tangling everywhere. Crowded and chaotic.
@@ -97,6 +107,7 @@ All reference photos are in the assets folder. Draw your own versions of these i
 ---
 
 ### Card 11 -- Three Mice on Thistle Heads
+
 ![Card 11](../../../.cursor/projects/c-Users-ray51-OneDrive-Desktop-21/assets/c__Users_ray51_AppData_Roaming_Cursor_User_workspaceStorage_720e85456e7c26449e23d815f7723f44_images_image-8681b319-c42d-4e73-b03d-3851db2444d2.png)
 
 **Scene:** Three mice each sitting atop their own thistle/scabious seed head, standing tall like sentinels against a dreamy blue meadow backdrop.
@@ -108,26 +119,28 @@ All reference photos are in the assets folder. Draw your own versions of these i
 ## Trump Cards (13 total -- no reference photos yet)
 
 ### Modifier Cards
-| Card | Effect | Art Direction |
-|------|--------|---------------|
-| +1 | Adds 1 to opponent's total | Rat tossing a single flower at opponent, looking smug |
-| +2 | Adds 2 to opponent's total | Rat lobbing two flowers like grenades |
-| +3 | Adds 3 to opponent's total | Rat with armful of three flowers, chucking them |
-| -1 | Subtracts 1 from your total | Rat eating one flower petal, looking content |
-| -2 | Subtracts 2 from your total | Rat nibbling through two flower stems |
-| -3 | Subtracts 3 from your total | Rat in a flower-petal fort, fully protected |
+
+| Card | Effect                      | Art Direction                                         |
+| ---- | --------------------------- | ----------------------------------------------------- |
+| +1   | Adds 1 to opponent's total  | Rat tossing a single flower at opponent, looking smug |
+| +2   | Adds 2 to opponent's total  | Rat lobbing two flowers like grenades                 |
+| +3   | Adds 3 to opponent's total  | Rat with armful of three flowers, chucking them       |
+| -1   | Subtracts 1 from your total | Rat eating one flower petal, looking content          |
+| -2   | Subtracts 2 from your total | Rat nibbling through two flower stems                 |
+| -3   | Subtracts 3 from your total | Rat in a flower-petal fort, fully protected           |
 
 ### Action Cards
-| Card | Effect | Art Direction |
-|------|--------|---------------|
-| Love Your Enemy | Swap all face-up cards with opponent | Two rats swapping flower bouquets, looking confused |
-| Body Bag | Remove one opponent face-up card | Rat dragging a wilted flower away into a hole |
-| Steal | Take one opponent face-up card for yourself | Rat in a tiny bandit mask sneaking off with a flower |
-| Transfer | Give one of your face-up cards to opponent | Rat reluctantly pushing a flower toward other side |
-| Return | Return one of your face-up cards to deck | Rat carefully replanting a flower into the ground |
-| Speed Loader | Draw 2 cards immediately | Rat running full speed carrying two flowers, motion lines |
-| Double Down | Stakes x2 this round | Two rats back-to-back looking serious on flower pile |
-| Change | Change target number from 21 | Rat holding a shapeshifting flower (half daisy, half rose) |
+
+| Card            | Effect                                      | Art Direction                                              |
+| --------------- | ------------------------------------------- | ---------------------------------------------------------- |
+| Love Your Enemy | Swap all face-up cards with opponent        | Two rats swapping flower bouquets, looking confused        |
+| Body Bag        | Remove one opponent face-up card            | Rat dragging a wilted flower away into a hole              |
+| Steal           | Take one opponent face-up card for yourself | Rat in a tiny bandit mask sneaking off with a flower       |
+| Transfer        | Give one of your face-up cards to opponent  | Rat reluctantly pushing a flower toward other side         |
+| Return          | Return one of your face-up cards to deck    | Rat carefully replanting a flower into the ground          |
+| Speed Loader    | Draw 2 cards immediately                    | Rat running full speed carrying two flowers, motion lines  |
+| Double Down     | Stakes x2 this round                        | Two rats back-to-back looking serious on flower pile       |
+| Change          | Change target number from 21                | Rat holding a shapeshifting flower (half daisy, half rose) |
 
 ---
 
