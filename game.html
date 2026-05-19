@@ -25,30 +25,31 @@
   <link rel="stylesheet" href="css/cards.css">
 </head>
 <body class="scene-bg">
-  <div id="game-container">
 
-    <button type="button" id="pause-btn" class="pause-btn" aria-label="Menu">
-      <svg class="pause-btn__icon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
-        <rect x="6" y="5" width="4" height="14" rx="1" fill="currentColor"/>
-        <rect x="14" y="5" width="4" height="14" rx="1" fill="currentColor"/>
-      </svg>
-      <span class="pause-btn__text">Menu</span>
-    </button>
+  <button type="button" id="pause-btn" class="pause-btn" aria-label="Menu">
+    <svg class="pause-btn__icon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+      <rect x="6" y="5" width="4" height="14" rx="1" fill="currentColor"/>
+      <rect x="14" y="5" width="4" height="14" rx="1" fill="currentColor"/>
+    </svg>
+    <span class="pause-btn__text">Menu</span>
+  </button>
 
-    <div class="music-chrome">
-      <button type="button" id="music-mute-top" class="music-mute-top" aria-label="Mute music">🔊</button>
-      <div id="music-now-playing" class="music-now-playing" role="status" aria-live="polite" aria-label="Now playing">
-        <img id="music-np-thumb" class="music-np-thumb" src="Music/Change My Style.jpg" alt="" draggable="false">
-        <div class="music-np-text">
-          <span class="music-np-label">Now Playing</span>
-          <span id="music-np-title" class="music-np-title">Change My Style</span>
-          <span id="music-np-artist" class="music-np-artist">Glow Machine</span>
-        </div>
+  <div class="music-chrome">
+    <button type="button" id="music-mute-top" class="music-mute-top" aria-label="Mute music">🔊</button>
+    <div id="music-now-playing" class="music-now-playing" role="status" aria-live="polite" aria-label="Now playing">
+      <img id="music-np-thumb" class="music-np-thumb" src="Music/In the name of Z.jpg" alt="" draggable="false">
+      <div class="music-np-text">
+        <span class="music-np-label">Now Playing</span>
+        <span id="music-np-title" class="music-np-title">In the Name of Z</span>
+        <span id="music-np-artist" class="music-np-artist">Real Heroes</span>
       </div>
     </div>
+  </div>
 
-    <div id="game-toast" class="game-toast hidden" role="status" aria-live="polite"></div>
-    <p id="online-match-badge" class="online-match-badge hidden" aria-live="polite"></p>
+  <div id="game-toast" class="game-toast hidden" role="status" aria-live="polite"></div>
+  <p id="online-match-badge" class="online-match-badge hidden" aria-live="polite"></p>
+
+  <div id="game-container">
 
     <!-- Turn banner + clock: centered strip, clear of Menu / music -->
     <div class="turn-header-wrap">

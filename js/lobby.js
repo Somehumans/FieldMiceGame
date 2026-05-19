@@ -4,6 +4,7 @@ import { saveStoredSettings } from './gameSettings.js';
 import { SettingsUI } from './settingsUI.js';
 import { loadStoredUsername, saveStoredUsername } from './username.js';
 import { saveOnlineSession, clearOnlineSession } from './onlineSession.js';
+import { initUiSounds, bindButtonClickSounds, navigateWithButtonClick } from './uiSounds.js';
 
 class Lobby {
   constructor() {
@@ -120,7 +121,7 @@ class Lobby {
 
     if (mode === 'ai') {
       clearOnlineSession();
-      window.location.href = 'game.html?mode=ai';
+      navigateWithButtonClick('game.html?mode=ai');
       return;
     }
 
@@ -266,6 +267,8 @@ class Lobby {
 const lobby = new Lobby();
 const musicPlayer = new MusicPlayer();
 document.addEventListener('DOMContentLoaded', () => {
-  lobby.init();
   musicPlayer.init();
+  initUiSounds(() => musicPlayer.getSfxVolume());
+  bindButtonClickSounds();
+  lobby.init();
 });

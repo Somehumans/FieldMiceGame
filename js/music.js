@@ -45,11 +45,15 @@ export class MusicPlayer {
     ];
     this.currentIndex = 0;
     this.audio = new Audio();
+    this.audio.preload = 'auto';
     this.isPlaying = false;
     this.isMuted = false;
     this.savedVolume = DEFAULT_MUSIC_VOLUME;
     this.sfxVolume = 0.7;
     this.sfxMuted = false;
+    this._unlockArmed = false;
+    this._npHideTimer = null;
+    this._npVisible = false;
 
     const saved = loadAudioSettings();
     if (saved) {
@@ -59,11 +63,7 @@ export class MusicPlayer {
       if (typeof saved.sfxMuted === 'boolean') this.sfxMuted = saved.sfxMuted;
     }
 
-    this._npHideTimer = null;
-    this._npVisible = false;
-
-    this.audio.addEventListener('loadedmetadata', () => this.applyMusicOutput());
-    this.applyMusicOutput();
+    this.syncVolume();
   }
 
   persistSettings() {
@@ -75,14 +75,8 @@ export class MusicPlayer {
     });
   }
 
-  applyMusicOutput() {
-    const vol = this.isMuted ? 0 : this.savedVolume;
-    this.audio.volume = vol;
-    if (vol <= 0 || this.isMuted) {
-      this.audio.pause();
-    } else if (this.isPlaying) {
-      this.audio.play().catch(() => {});
-    }
+  syncVolume() {
+    this.audio.volume = this.isMuted ? 0 : this.savedVolume;
   }
 
   init(options = {}) {
@@ -93,7 +87,7 @@ export class MusicPlayer {
 
     this.audio.addEventListener('ended', () => this.next());
     this.loadTrack(0, { notify: false });
-    this.autoplay();
+    this.startPlayback({ showNowPlaying: true });
   }
 
   setupChrome() {
@@ -164,7 +158,13 @@ export class MusicPlayer {
   setMusicVolume(vol) {
     this.savedVolume = Math.max(0, Math.min(1, vol));
     this.isMuted = this.savedVolume === 0;
-    this.applyMusicOutput();
+    this.syncVolume();
+    if (this.isMuted) {
+      this.audio.pause();
+      this.isPlaying = false;
+    } else {
+      this.startPlayback({ showNowPlaying: false });
+    }
     this.syncTopMuteButton();
     this.syncPauseMenuMusic();
     this.persistSettings();
@@ -184,7 +184,13 @@ export class MusicPlayer {
 
   toggleMute() {
     this.isMuted = !this.isMuted;
-    this.applyMusicOutput();
+    this.syncVolume();
+    if (this.isMuted) {
+      this.audio.pause();
+      this.isPlaying = false;
+    } else {
+      this.startPlayback({ showNowPlaying: false });
+    }
     this.syncTopMuteButton();
     this.syncPauseMenuMusic();
     this.persistSettings();
@@ -195,6 +201,52 @@ export class MusicPlayer {
     this.topMuteBtn.textContent = this.isMuted ? '🔇' : '🔊';
     this.topMuteBtn.classList.toggle('muted', this.isMuted);
     this.topMuteBtn.setAttribute('aria-label', this.isMuted ? 'Unmute music' : 'Mute music');
+  }
+
+  /** Start or resume music as soon as the track can play. */
+  startPlayback({ showNowPlaying = false } = {}) {
+    if (this.isMuted || this.savedVolume <= 0) {
+      this.isPlaying = false;
+      return;
+    }
+
+    this.syncVolume();
+
+    const playNow = () => {
+      this.audio.play()
+        .then(() => {
+          this.isPlaying = true;
+          if (showNowPlaying) this.showNowPlaying();
+        })
+        .catch(() => this.armAutoplayUnlock(showNowPlaying));
+    };
+
+    if (this.audio.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) {
+      playNow();
+      return;
+    }
+
+    this.audio.addEventListener('canplay', playNow, { once: true });
+  }
+
+  armAutoplayUnlock(showNowPlaying) {
+    if (this._unlockArmed) return;
+    this._unlockArmed = true;
+
+    const resume = () => {
+      this._unlockArmed = false;
+      if (this.isMuted || this.savedVolume <= 0) return;
+      this.syncVolume();
+      this.audio.play()
+        .then(() => {
+          this.isPlaying = true;
+          if (showNowPlaying) this.showNowPlaying();
+        })
+        .catch(() => {});
+    };
+
+    document.addEventListener('click', resume, { once: true, capture: true });
+    document.addEventListener('keydown', resume, { once: true });
   }
 
   showNowPlaying() {
@@ -238,40 +290,15 @@ export class MusicPlayer {
     this.nowPlayingEl.addEventListener('transitionend', onEnd);
   }
 
-  autoplay() {
-    if (this.isMuted || this.savedVolume <= 0) {
-      this.isPlaying = false;
-      return;
-    }
-    this.audio.play().then(() => {
-      this.isPlaying = true;
-      this.applyMusicOutput();
-      this.showNowPlaying();
-    }).catch(() => {
-      const resume = () => {
-        if (this.isMuted || this.savedVolume <= 0) return;
-        this.audio.play().then(() => {
-          this.isPlaying = true;
-          this.applyMusicOutput();
-          this.showNowPlaying();
-        }).catch(() => {});
-      };
-      document.addEventListener('pointerup', resume, { once: true });
-      document.addEventListener('keydown', resume, { once: true });
-    });
-  }
-
   loadTrack(index, { notify = true } = {}) {
     this.currentIndex = index;
     const track = this.tracks[index];
     this.audio.src = track.src;
-    this.applyMusicOutput();
+    this.syncVolume();
 
     if (this.isPlaying && !this.isMuted && this.savedVolume > 0) {
-      this.audio.play().catch(() => {});
+      this.startPlayback({ showNowPlaying: notify });
     }
-
-    if (notify) this.showNowPlaying();
   }
 
   next() {
