@@ -16,6 +16,7 @@ import {
 import { loadStoredUsername } from './username.js';
 import { resolveOnlineParams, clearOnlineSession, saveOnlineSession } from './onlineSession.js';
 import { initUiSounds, bindButtonClickSounds } from './uiSounds.js';
+import { initMobileWarning } from './mobileWarning.js';
 
 class Game {
   static SFX = {
@@ -1201,5 +1202,6 @@ document.addEventListener('DOMContentLoaded', () => {
   musicPlayer.init({ pauseMenu: true });
   initUiSounds(() => musicPlayer.getSfxVolume());
   bindButtonClickSounds();
+  initMobileWarning();
   game.init();
 });

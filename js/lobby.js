@@ -5,6 +5,7 @@ import { SettingsUI } from './settingsUI.js';
 import { loadStoredUsername, saveStoredUsername } from './username.js';
 import { saveOnlineSession, clearOnlineSession } from './onlineSession.js';
 import { initUiSounds, bindButtonClickSounds, navigateWithButtonClick } from './uiSounds.js';
+import { initMobileWarning } from './mobileWarning.js';
 
 class Lobby {
   constructor() {
@@ -270,5 +271,6 @@ document.addEventListener('DOMContentLoaded', () => {
   musicPlayer.init();
   initUiSounds(() => musicPlayer.getSfxVolume());
   bindButtonClickSounds();
+  initMobileWarning();
   lobby.init();
 });

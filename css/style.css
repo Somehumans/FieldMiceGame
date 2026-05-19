@@ -1453,6 +1453,75 @@ body {
   background: radial-gradient(ellipse 80% 55% at 50% 45%, rgba(70, 55, 95, 0.1), rgba(22, 14, 34, 0.97) 72%);
 }
 
+/* Mobile / tablet — desktop recommended */
+.mobile-pc-warning {
+  position: fixed;
+  inset: 0;
+  z-index: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 16px;
+  background: rgba(28, 18, 42, 0.88);
+  backdrop-filter: blur(6px);
+}
+
+.mobile-pc-warning.hidden {
+  display: none;
+  pointer-events: none;
+}
+
+@media (min-width: 901px) {
+  .mobile-pc-warning {
+    display: none !important;
+  }
+}
+
+.mobile-pc-warning__panel {
+  width: min(100%, 380px);
+  padding: 24px 22px 20px;
+  text-align: center;
+  background: var(--cream, #e8e4d0);
+  border: 4px solid var(--sage-border, #6a7a4a);
+  border-radius: 16px;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.35);
+}
+
+.mobile-pc-warning__badge {
+  font-size: 2rem;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+.mobile-pc-warning__title {
+  font-family: var(--font, 'Fredoka', sans-serif);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--text-dark, #3a3040);
+  margin-bottom: 10px;
+}
+
+.mobile-pc-warning__body {
+  font-family: var(--font, 'Fredoka', sans-serif);
+  font-size: 0.92rem;
+  line-height: 1.45;
+  color: var(--text-dark, #3a3040);
+  margin-bottom: 8px;
+}
+
+.mobile-pc-warning__hint {
+  font-family: var(--font, 'Fredoka', sans-serif);
+  font-size: 0.8rem;
+  line-height: 1.4;
+  color: var(--text-muted, #6a5a7a);
+  margin-bottom: 18px;
+}
+
+.mobile-pc-warning__btn {
+  width: 100%;
+  max-width: 280px;
+}
+
 /* Overlays */
 .overlay {
   position: fixed;
@@ -1907,15 +1976,22 @@ body {
   .life-heart { width: 15px; height: 15px; }
   .lives-dots { gap: 4px; }
 
-  /* Timer + pause: top-right; turn banner stays centered below */
+  /* Timer + pause: top-right; turn banner left — keeps upper-right clear for enemy trumps */
   .turn-header-wrap {
     position: static;
-    min-height: 32px;
-    padding: var(--game-top-chrome-h) 8px 2px;
+    min-height: 28px;
+    padding: var(--game-top-chrome-h) 8px 4px;
+    justify-content: flex-start;
+    align-items: flex-start;
   }
 
   .turn-header {
     gap: 6px;
+    justify-content: flex-start;
+    width: 100%;
+    max-width: none;
+    padding-right: calc(var(--col-right) + 12px);
+    box-sizing: border-box;
   }
 
   .turn-timer-clock {
@@ -1949,10 +2025,23 @@ body {
   }
 
   .turn-banner {
-    margin-top: 0;
-    margin-bottom: 0;
+    margin: 0 0 0 2px;
     font-size: 0.82rem;
     padding: 4px 16px;
+  }
+
+  /* Sit inside table top-right — no upward peek into turn strip (was covered by banner) */
+  #opponent-fan-area {
+    transform: none;
+    top: 6px;
+    right: calc(var(--col-right) + 4px);
+    z-index: 26;
+    max-width: calc(var(--col-right) + 32px);
+  }
+
+  .opp-trump-label {
+    font-size: 0.52rem;
+    padding: 3px 8px;
   }
 
   .online-match-badge {
