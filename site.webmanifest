@@ -1,0 +1,17 @@
+{
+  "name": "Field Mice - 21",
+  "short_name": "Field Mice",
+  "description": "Play Field Mice - 21 online. A cute mouse-themed card game with trumps, shop, and multiplayer.",
+  "start_url": "/21/",
+  "display": "standalone",
+  "background_color": "#b8a0d4",
+  "theme_color": "#6a50a0",
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

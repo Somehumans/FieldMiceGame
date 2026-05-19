@@ -3,7 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Field Mice - 21</title>
+  <title>Play Field Mice - 21 | Online Card Game</title>
+  <meta name="description" content="Play a Field Mice - 21 match online or practice against the CPU. Hit, stay, trump cards, and rising heart stakes.">
+  <meta name="keywords" content="fieldmice, field mice, field mice 21, play field mice, card game online">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://somehumans.github.io/21/game.html">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="favicon.svg">
+  <link rel="manifest" href="site.webmanifest">
+  <meta name="theme-color" content="#6a50a0">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Play Field Mice - 21">
+  <meta property="og:description" content="Play Field Mice - 21 in your browser — trumps, shop, multiplayer, and practice mode.">
+  <meta property="og:url" content="https://somehumans.github.io/21/game.html">
+  <meta property="og:image" content="https://somehumans.github.io/21/assets/logo%20recolour.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/scene.css">
@@ -13,7 +27,13 @@
 <body class="scene-bg">
   <div id="game-container">
 
-    <button id="pause-btn">Menu</button>
+    <button type="button" id="pause-btn" class="pause-btn" aria-label="Menu">
+      <svg class="pause-btn__icon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+        <rect x="6" y="5" width="4" height="14" rx="1" fill="currentColor"/>
+        <rect x="14" y="5" width="4" height="14" rx="1" fill="currentColor"/>
+      </svg>
+      <span class="pause-btn__text">Menu</span>
+    </button>
 
     <div class="music-chrome">
       <button type="button" id="music-mute-top" class="music-mute-top" aria-label="Mute music">🔊</button>
@@ -93,6 +113,10 @@
         <div class="score-box">
           <span id="opponent-score" class="score-text">0+?/21</span>
         </div>
+        <div id="round-stakes-wrap" class="round-stakes-wrap score-box" aria-live="polite">
+          <span class="round-stakes-label">Round <span id="round-number">1</span> bet</span>
+          <span id="round-stakes-hearts" class="round-stakes-hearts"></span>
+        </div>
         <div id="deck-area" class="deck-area">
           <div class="deck-visual pigeon-deck">
             <div class="deck-thickness" aria-hidden="true"></div>
@@ -122,6 +146,30 @@
   </div>
 
   <!-- Overlays -->
+  <div id="round-end-cutscene" class="round-end-cutscene hidden" aria-hidden="true">
+    <div class="round-end-cutscene__wipe" aria-hidden="true"></div>
+    <div class="round-end-cutscene__inner">
+      <div id="round-end-beat-results" class="round-end-beat round-end-beat--results" hidden>
+        <p id="round-end-outcome" class="round-end-outcome"></p>
+        <p id="round-end-margin" class="round-end-margin"></p>
+        <div class="round-end-scores">
+          <span>You <strong id="round-end-your-total">0</strong></span>
+          <span class="round-end-vs">vs</span>
+          <span>Them <strong id="round-end-opp-total">0</strong></span>
+        </div>
+        <p id="round-end-target" class="round-end-target"></p>
+        <div id="round-end-hearts" class="round-end-hearts"></div>
+        <p id="round-end-stakes" class="round-end-stakes"></p>
+        <p class="round-end-tap-hint">Tap to continue</p>
+      </div>
+      <div id="round-end-beat-round" class="round-end-beat round-end-beat--round" hidden>
+        <p class="round-end-round-pre">ROUND</p>
+        <p id="round-end-round-num" class="round-end-round-num">1</p>
+        <button type="button" class="overlay-btn round-end-continue" id="next-round-btn">Next Round</button>
+      </div>
+    </div>
+  </div>
+
   <div id="overlay" class="overlay hidden">
     <div id="overlay-content" class="overlay-box"></div>
   </div>
@@ -176,7 +224,7 @@
         <div class="volume-section">
           <div class="volume-row">
             <span class="volume-label">Music</span>
-            <input type="range" id="music-volume" class="volume-slider" min="0" max="100" value="13">
+            <input type="range" id="music-volume" class="volume-slider" min="0" max="100" value="6">
             <button id="music-mute-btn" class="mute-btn">🔊</button>
           </div>
           <div class="volume-row">

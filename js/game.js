@@ -728,11 +728,11 @@ class Game {
 
       const showDelay = this.engine.phase === 'gameOver' ? 1000 : 800;
 
-      setTimeout(() => {
+      setTimeout(async () => {
         if (this.engine.phase === 'gameOver') {
           this.renderer.showGameOver(this.engine.winner, this.playerRole);
         } else {
-          this.renderer.showRoundResult(data, this.playerRole);
+          await this.renderer.playRoundEndCutscene(data, this.playerRole);
         }
         this.bindResultButtons();
       }, showDelay);
@@ -740,9 +740,13 @@ class Game {
   }
 
   bindResultButtons() {
-    const nextBtn = document.getElementById('next-round-btn');
+    let nextBtn = document.getElementById('next-round-btn');
     if (nextBtn) {
+      const fresh = nextBtn.cloneNode(true);
+      nextBtn.replaceWith(fresh);
+      nextBtn = fresh;
       nextBtn.addEventListener('click', () => {
+        this.renderer.hideRoundEndCutscene();
         this.renderer.hideOverlay();
         if (this.mode === 'online' && !this.isOnlineHost()) return;
         const result = this.engine.startNewRound();

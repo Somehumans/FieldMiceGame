@@ -51,6 +51,9 @@ export class Renderer {
       playerName: document.getElementById('player-name'),
       opponentScore: document.getElementById('opponent-score'),
       playerScore: document.getElementById('player-score'),
+      roundStakesWrap: document.getElementById('round-stakes-wrap'),
+      roundNumber: document.getElementById('round-number'),
+      roundStakesHearts: document.getElementById('round-stakes-hearts'),
       turnBanner: document.getElementById('turn-banner'),
       btnDraw: document.getElementById('btn-draw'),
       btnKeep: document.getElementById('btn-keep'),
@@ -78,7 +81,10 @@ export class Renderer {
       shopOverlayCards: document.getElementById('shop-overlay-cards'),
       shopCloseBtn: document.getElementById('shop-close-btn'),
       gameContainer: document.getElementById('game-container'),
-      gameToast: document.getElementById('game-toast')
+      gameToast: document.getElementById('game-toast'),
+      roundEndCutscene: document.getElementById('round-end-cutscene'),
+      roundEndBeatResults: document.getElementById('round-end-beat-results'),
+      roundEndBeatRound: document.getElementById('round-end-beat-round'),
     };
 
     if (this.el.centerCol && typeof ResizeObserver !== 'undefined') {
@@ -104,6 +110,7 @@ export class Renderer {
     this.renderLives('player', state.you.lives, maxLives);
     this.renderScore('opponent', state.opponent, state.targetValue);
     this.renderScore('player', state.you, state.targetValue);
+    this.renderRoundStakes(state.roundNumber, state.roundStakes, state.phase);
     this.renderTurnBanner(isYourTurn, state.phase);
     this.updateButtons(isYourTurn, state);
     this.updateShopButton(isYourTurn, state, showShopIcon);
@@ -358,6 +365,22 @@ export class Renderer {
 
   // --- Score ---
 
+  renderRoundStakes(roundNumber, roundStakes, phase) {
+    const wrap = this.el.roundStakesWrap;
+    if (!wrap) return;
+
+    const show = roundNumber > 0 && !['idle'].includes(phase);
+    wrap.classList.toggle('hidden', !show);
+    if (!show) return;
+
+    if (this.el.roundNumber) {
+      this.el.roundNumber.textContent = String(roundNumber);
+    }
+    if (this.el.roundStakesHearts) {
+      this.el.roundStakesHearts.innerHTML = stakesHeartsHtml(roundStakes ?? roundNumber);
+    }
+  }
+
   renderScore(side, data, target) {
     const el = side === 'opponent' ? this.el.opponentScore : this.el.playerScore;
     if (side === 'opponent') {
@@ -429,58 +452,144 @@ export class Renderer {
     this.el.overlay.classList.add('hidden');
   }
 
-  showRoundResult(data, perspective) {
+  _cutsceneWait(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
+  hideRoundEndCutscene() {
+    const root = this.el.roundEndCutscene;
+    if (!root) return;
+    root.classList.add('hidden');
+    root.setAttribute('aria-hidden', 'true');
+    root.classList.remove('round-end-cutscene--active', 'round-end-cutscene--wipe');
+    root.style.cursor = '';
+    this.el.roundEndBeatResults?.classList.remove('round-end-beat--visible', 'round-end-beat--exit');
+    this.el.roundEndBeatRound?.classList.remove('round-end-beat--visible', 'round-end-beat--exit');
+    this.el.roundEndBeatResults?.setAttribute('hidden', '');
+    this.el.roundEndBeatRound?.setAttribute('hidden', '');
+  }
+
+  async playRoundEndCutscene(data, perspective) {
+    const root = this.el.roundEndCutscene;
+    const beatResults = this.el.roundEndBeatResults;
+    const beatRound = this.el.roundEndBeatRound;
+    if (!root || !beatResults || !beatRound) {
+      this.showRoundResultFallback(data, perspective);
+      return;
+    }
+
     const isWinner = data.winner === perspective;
     const isDraw = data.winner === 'draw';
     const maxLives = data.maxLives ?? STARTING_LIVES;
+    const margin = Math.abs(data.yourTotal - data.oppTotal);
 
-    let titleClass, titleText, emoji, tagline;
+    let mood = 'lose';
+    let outcome = 'Ouch!';
+    let marginText = `You lost by ${margin}`;
     if (isDraw) {
-      titleClass = 'draw';
-      titleText = 'Dead heat!';
-      emoji = '🤝';
-      tagline = 'Nobody loses hearts this round. Phew!';
+      mood = 'draw';
+      outcome = 'Dead heat!';
+      marginText = 'A perfect tie — no hearts lost';
     } else if (isWinner) {
-      titleClass = 'win';
-      titleText = 'You got \'em!';
-      emoji = '🎉';
-      tagline = `They pay the bet — ${stakesHeartsHtml(data.livesLost)}`;
-    } else {
-      titleClass = 'lose';
-      titleText = 'Ouch!';
-      emoji = '💔';
-      tagline = `You paid the bet — ${stakesHeartsHtml(data.livesLost)}`;
+      mood = 'win';
+      outcome = "You got 'em!";
+      marginText = `You won by ${margin}`;
     }
 
-    const betLine = `Round ${data.roundNumber} bet: ${stakesHeartsHtml(data.stakes)}`;
-    const nextBet = stakesHeartsHtml(data.roundNumber + 1);
+    const outcomeEl = document.getElementById('round-end-outcome');
+    const marginEl = document.getElementById('round-end-margin');
+    const yourTotalEl = document.getElementById('round-end-your-total');
+    const oppTotalEl = document.getElementById('round-end-opp-total');
+    const targetEl = document.getElementById('round-end-target');
+    const heartsEl = document.getElementById('round-end-hearts');
+    const stakesEl = document.getElementById('round-end-stakes');
+    const roundNumEl = document.getElementById('round-end-round-num');
 
+    if (outcomeEl) {
+      outcomeEl.textContent = outcome;
+      outcomeEl.className = `round-end-outcome round-end-outcome--${mood}`;
+    }
+    if (marginEl) marginEl.textContent = marginText;
+    if (yourTotalEl) yourTotalEl.textContent = String(data.yourTotal);
+    if (oppTotalEl) oppTotalEl.textContent = String(data.oppTotal);
+    if (targetEl) targetEl.textContent = `Target was ${data.target}`;
+    if (heartsEl) {
+      heartsEl.innerHTML = `
+        <div class="round-end-hearts-row">
+          <span class="round-end-hearts-label">Your hearts</span>
+          ${livesHeartsHtml(data.yourLives, maxLives)}
+        </div>
+        <div class="round-end-hearts-row">
+          <span class="round-end-hearts-label">Their hearts</span>
+          ${livesHeartsHtml(data.oppLives, maxLives)}
+        </div>`;
+    }
+    if (stakesEl) {
+      const paid = isDraw
+        ? 'No bet paid'
+        : (isWinner
+          ? `They pay ${data.stakes} heart${data.stakes === 1 ? '' : 's'}`
+          : `You pay ${data.stakes} heart${data.stakes === 1 ? '' : 's'}`);
+      stakesEl.innerHTML = `${paid} · Next bet: ${stakesHeartsHtml(data.roundNumber + 1)}`;
+    }
+    if (roundNumEl) roundNumEl.textContent = String(data.roundNumber + 1);
+
+    root.classList.remove('hidden');
+    root.setAttribute('aria-hidden', 'false');
+    root.classList.add('round-end-cutscene--active');
+    root.dataset.mood = mood;
+
+    beatRound.setAttribute('hidden', '');
+    beatResults.removeAttribute('hidden');
+
+    let skipped = false;
+    const onTap = (e) => {
+      if (e.target.closest('#next-round-btn')) return;
+      skipped = true;
+    };
+    beatResults.addEventListener('click', onTap, { once: true });
+
+    await this._cutsceneWait(80);
+    beatResults.classList.add('round-end-beat--visible');
+
+    const resultsDuration = 2600;
+    const start = Date.now();
+    while (Date.now() - start < resultsDuration && !skipped) {
+      await this._cutsceneWait(80);
+    }
+    beatResults.removeEventListener('click', onTap);
+
+    beatResults.classList.add('round-end-beat--exit');
+    root.classList.add('round-end-cutscene--wipe');
+    await this._cutsceneWait(420);
+    beatResults.classList.remove('round-end-beat--visible', 'round-end-beat--exit');
+    beatResults.setAttribute('hidden', '');
+    root.classList.remove('round-end-cutscene--wipe');
+
+    beatRound.removeAttribute('hidden');
+    root.classList.add('round-end-cutscene--wipe');
+    await this._cutsceneWait(60);
+    beatRound.classList.add('round-end-beat--visible');
+    await this._cutsceneWait(500);
+    root.classList.remove('round-end-cutscene--wipe');
+    root.style.cursor = 'default';
+  }
+
+  showRoundResultFallback(data, perspective) {
+    const isWinner = data.winner === perspective;
+    const isDraw = data.winner === 'draw';
+    const margin = Math.abs(data.yourTotal - data.oppTotal);
     this.showOverlay(`
-      <div class="round-result round-result--${titleClass}">
-        <div class="result-emoji" aria-hidden="true">${emoji}</div>
-        <h2 class="result-title ${titleClass}">${titleText}</h2>
-        <p class="result-tagline">${tagline}</p>
-        <div class="result-scores">
-          <span class="result-score-you">You <strong>${data.yourTotal}</strong></span>
-          <span class="result-score-vs">vs</span>
-          <span class="result-score-opp">Them <strong>${data.oppTotal}</strong></span>
-        </div>
-        <p class="result-target">Aim was <strong>${data.target}</strong></p>
-        <div class="result-hearts-panel">
-          <div class="result-hearts-block">
-            <span class="result-hearts-label">Your hearts</span>
-            ${livesHeartsHtml(data.yourLives, maxLives)}
-          </div>
-          <div class="result-hearts-block">
-            <span class="result-hearts-label">Their hearts</span>
-            ${livesHeartsHtml(data.oppLives, maxLives)}
-          </div>
-        </div>
-        <p class="result-bet-note">${betLine}</p>
-        <p class="result-next-stakes">Next round bet: ${nextBet}</p>
+      <div class="round-result">
+        <h2>${isDraw ? 'Draw' : isWinner ? 'You win!' : 'You lose'}</h2>
+        <p>${isDraw ? 'Tie game' : isWinner ? `Won by ${margin}` : `Lost by ${margin}`}</p>
         <button class="overlay-btn" id="next-round-btn">Next Round</button>
       </div>
     `);
+  }
+
+  showRoundResult(data, perspective) {
+    return this.playRoundEndCutscene(data, perspective);
   }
 
   showGameOver(winner, perspective) {

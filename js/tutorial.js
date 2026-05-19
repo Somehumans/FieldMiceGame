@@ -78,8 +78,8 @@ export const GAME_TUTORIAL_STEPS = [
   },
   {
     title: 'Rising stakes',
-    body: 'Each round, the heart bet goes up (round 1 = 1 heart, round 2 = 2, and so on). The shop gets more valuable over time!',
-    selector: '#opponent-score',
+    body: 'This shows the <strong>round bet</strong> — how many hearts the loser pays. It goes up each round (round 1 = 1 heart, round 2 = 2, and so on).',
+    selector: '#round-stakes-wrap',
     placement: 'left',
   },
   {
