@@ -337,8 +337,8 @@
     }
 
     .settings-panel {
-      width: min(400px, 100%);
-      max-height: min(92vh, 640px);
+      width: min(440px, 100%);
+      max-height: min(92vh, 720px);
       overflow-y: auto;
       padding: 22px 22px 18px;
       background: var(--cream-light);
@@ -436,6 +436,121 @@
       border-color: var(--purple-dark);
       box-shadow: 0 3px 0 var(--purple-dark);
     }
+
+    .settings-deck-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .settings-deck-head label {
+      font-size: 0.92rem;
+      font-weight: 600;
+      margin: 0;
+    }
+
+    .settings-deck-head span {
+      font-weight: 700;
+      color: var(--purple-deeper);
+    }
+
+    .settings-deck-reset {
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 4px 10px;
+      border: 2px solid var(--sage-border);
+      border-radius: 8px;
+      background: var(--purple-bg);
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+
+    .settings-deck-reset:hover {
+      color: var(--text-dark);
+      border-color: var(--purple-deeper);
+    }
+
+    .settings-deck-editor {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px 10px;
+      padding: 10px;
+      background: rgba(122, 90, 168, 0.08);
+      border: 2px solid rgba(122, 90, 168, 0.2);
+      border-radius: 10px;
+      max-height: 220px;
+      overflow-y: auto;
+    }
+
+    .settings-deck-row {
+      display: grid;
+      grid-template-columns: 28px 18px 28px 22px 28px;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .settings-deck-thumb {
+      width: 28px;
+      height: auto;
+      border-radius: 3px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    }
+
+    .settings-deck-label {
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-align: center;
+      color: var(--purple-deeper);
+    }
+
+    .settings-deck-btn {
+      width: 28px;
+      height: 28px;
+      padding: 0;
+      font-size: 1.1rem;
+      line-height: 1;
+      font-weight: 700;
+      border: 2px solid var(--sage-border);
+      border-radius: 8px;
+      background: var(--cream-light);
+      color: var(--purple-deeper);
+      cursor: pointer;
+    }
+
+    .settings-deck-btn:hover:not(:disabled) {
+      background: var(--purple-bg);
+      border-color: var(--purple-deeper);
+    }
+
+    .settings-deck-btn:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+
+    .settings-deck-count {
+      font-size: 0.9rem;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .settings-deck-hint {
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      margin: 6px 0 0;
+      line-height: 1.35;
+    }
+
+    .settings-deck-hint--warn {
+      color: #a63d2a;
+      font-weight: 600;
+    }
+
+    #settings-start:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
   </style>
 </head>
 <body class="scene-bg">
@@ -528,9 +643,9 @@
       <div class="settings-field">
         <label for="settings-trump-chance">
           <span>Trump draw chance</span>
-          <span id="settings-trump-val">40%</span>
+          <span id="settings-trump-val">50%</span>
         </label>
-        <input type="range" id="settings-trump-chance" min="0" max="80" step="5" value="40">
+        <input type="range" id="settings-trump-chance" min="0" max="80" step="5" value="50">
       </div>
 
       <div class="settings-field">
@@ -547,6 +662,18 @@
           <span id="settings-lives-val">9</span>
         </label>
         <input type="range" id="settings-lives" min="3" max="15" step="1" value="9">
+      </div>
+
+      <div class="settings-field">
+        <div class="settings-deck-head">
+          <label for="settings-deck-editor">
+            <span>Deck</span>
+            <span id="settings-deck-total">11 cards</span>
+          </label>
+          <button type="button" class="settings-deck-reset" id="settings-deck-reset">Reset</button>
+        </div>
+        <div id="settings-deck-editor" class="settings-deck-editor" role="group" aria-label="Deck composition"></div>
+        <p id="settings-deck-hint" class="settings-deck-hint">Each value can appear up to 4 times.</p>
       </div>
 
       <div class="settings-actions">

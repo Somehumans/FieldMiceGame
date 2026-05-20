@@ -123,12 +123,19 @@ export class Renderer {
 
     rowEl.classList.remove('card-row--overlap');
     rowEl.style.removeProperty('--card-overlap');
-    rowEl.style.removeProperty('--row-card-w');
-    rowEl.style.removeProperty('--row-card-h');
 
     const cards = rowEl.querySelectorAll('.card');
     const n = cards.length;
-    if (n === 0) return;
+    if (n === 0) {
+      rowEl.style.removeProperty('--row-card-w');
+      rowEl.style.removeProperty('--row-card-h');
+      delete rowEl.dataset.fitCardCount;
+      return;
+    }
+
+    const prevCount = parseInt(rowEl.dataset.fitCardCount || '0', 10);
+    const countChanged = n !== prevCount;
+    rowEl.dataset.fitCardCount = String(n);
 
     const root = getComputedStyle(document.documentElement);
     const baseW = parseFloat(root.getPropertyValue('--play-card-w')) || 130;
@@ -139,7 +146,16 @@ export class Renderer {
     if (avail <= 0) return;
 
     const needed = n * baseW + Math.max(0, n - 1) * gap;
-    if (needed <= avail) return;
+
+    // Row fits at default size — always use full-size cards (e.g. new round with fewer cards).
+    if (needed <= avail) {
+      rowEl.style.removeProperty('--row-card-w');
+      rowEl.style.removeProperty('--row-card-h');
+      return;
+    }
+
+    // Same card count: keep current size; don't re-shrink on every resize (fixes mobile shrink loop).
+    if (!countChanged) return;
 
     const minScale = 0.55;
     let scale = avail / needed;
@@ -297,7 +313,17 @@ export class Renderer {
 
   // --- Render sections ---
 
+  resetCardRowLayout(rowEl) {
+    if (!rowEl) return;
+    rowEl.classList.remove('card-row--overlap');
+    rowEl.style.removeProperty('--card-overlap');
+    rowEl.style.removeProperty('--row-card-w');
+    rowEl.style.removeProperty('--row-card-h');
+    delete rowEl.dataset.fitCardCount;
+  }
+
   renderOpponentCards(data) {
+    this.resetCardRowLayout(this.el.opponentCards);
     this.el.opponentCards.innerHTML = '';
 
     if (data.faceDown !== null) {
@@ -316,6 +342,7 @@ export class Renderer {
   }
 
   renderPlayerCards(data) {
+    this.resetCardRowLayout(this.el.playerCards);
     this.el.playerCards.innerHTML = '';
 
     const faceDown = this.createNumberCard(data.faceDown);
@@ -425,9 +452,11 @@ export class Renderer {
   }
 
   updateButtons(isYourTurn, state) {
-    const canAct = isYourTurn && state.phase === 'playing';
-    this.el.btnDraw.disabled = !canAct;
-    this.el.btnKeep.disabled = !canAct;
+    const playing = isYourTurn && state.phase === 'playing';
+    const stayed = state.you?.stayed;
+    const busted = state.you?.busted;
+    this.el.btnDraw.disabled = !playing || stayed || busted;
+    this.el.btnKeep.disabled = !playing || stayed;
   }
 
   // --- Shop icon (left column) ---

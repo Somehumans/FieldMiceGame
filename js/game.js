@@ -1104,9 +1104,16 @@ class Game {
       }
 
       const total = this.engine.getHandTotal(aiRole);
-      const target = this.engine.targetValue;
+      const target = this.engine.getTarget(aiRole);
       const diff = target - total;
       const trumpCards = this.engine.players[aiRole].trumpCards;
+
+      if (this.engine.isBusted(aiRole)) {
+        await this.aiPause(600, 1200);
+        this.engine.stay(aiRole);
+        this.updateUI();
+        return;
+      }
 
       // Try to use helpful trump if busting
       if (diff < 0 && trumpCards.length > 0) {

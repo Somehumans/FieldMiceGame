@@ -6,7 +6,11 @@ import {
   SHOP_EXCLUSIVE_PLUS_PLUS,
   getShopTrumpTier
 } from './trumpCards.js';
-import { DEFAULT_GAME_SETTINGS, normalizeSettings } from './gameSettings.js';
+import {
+  DEFAULT_GAME_SETTINGS,
+  DEFAULT_DECK_CARDS,
+  normalizeSettings,
+} from './gameSettings.js';
 
 /** Default starting Micecoin balance (overridden by match settings) */
 export const STARTING_LIVES = DEFAULT_GAME_SETTINGS.startingLives;
@@ -17,6 +21,7 @@ export class GameEngine {
     this.settings = { ...DEFAULT_GAME_SETTINGS };
     this.trumpDrawChance = DEFAULT_GAME_SETTINGS.trumpDrawChance / 100;
     this.startingLives = DEFAULT_GAME_SETTINGS.startingLives;
+    this.deckCards = [...DEFAULT_DECK_CARDS];
     this.reset();
   }
 
@@ -24,6 +29,7 @@ export class GameEngine {
     this.settings = normalizeSettings(settings);
     this.trumpDrawChance = this.settings.trumpDrawChance / 100;
     this.startingLives = this.settings.startingLives;
+    this.deckCards = [...this.settings.deckCards];
   }
 
   reset() {
@@ -80,7 +86,8 @@ export class GameEngine {
   }
 
   createDeck() {
-    this.deck = shuffleArray([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
+    const source = this.deckCards?.length ? this.deckCards : DEFAULT_DECK_CARDS;
+    this.deck = shuffleArray([...source]);
   }
 
   drawCard() {
@@ -183,6 +190,7 @@ export class GameEngine {
 
     this.roundNumber++;
     this.createDeck();
+    this.trumpDeck = createTrumpDeck();
     this.targetValue = 21;
     this.goForTarget = null;
     this.roundStakes = this.roundNumber;
@@ -199,10 +207,14 @@ export class GameEngine {
     this.players.host.faceUp.push(this.drawCard());
     this.players.guest.faceUp.push(this.drawCard());
 
-    this.players.host.trumpCards.push(this.drawTrumpCard());
-    this.players.host.trumpCards.push(this.drawTrumpCard());
-    this.players.guest.trumpCards.push(this.drawTrumpCard());
-    this.players.guest.trumpCards.push(this.drawTrumpCard());
+    const hostTrump1 = this.drawTrumpCard();
+    const hostTrump2 = this.drawTrumpCard();
+    const guestTrump1 = this.drawTrumpCard();
+    const guestTrump2 = this.drawTrumpCard();
+    if (hostTrump1) this.players.host.trumpCards.push(hostTrump1);
+    if (hostTrump2) this.players.host.trumpCards.push(hostTrump2);
+    if (guestTrump1) this.players.guest.trumpCards.push(guestTrump1);
+    if (guestTrump2) this.players.guest.trumpCards.push(guestTrump2);
 
     this.generateShop();
 
@@ -235,10 +247,21 @@ export class GameEngine {
     return total;
   }
 
+  getTarget(player) {
+    return this.goForTarget ?? this.targetValue;
+  }
+
+  isBusted(player) {
+    return this.getHandTotal(player) > this.getTarget(player);
+  }
+
   hit(player) {
     if (this.phase !== 'playing') return { success: false, error: 'Not in playing phase' };
     if (this.currentTurn !== player) return { success: false, error: 'Not your turn' };
     if (this.players[player].stayed) return { success: false, error: 'Already stayed' };
+    if (this.isBusted(player)) {
+      return { success: false, error: 'You busted — you cannot draw more cards', busted: true };
+    }
 
     const card = this.drawCard();
     if (card === null) {
@@ -413,7 +436,12 @@ export class GameEngine {
   }
 
   canAct(player) {
-    return this.phase === 'playing' && this.currentTurn === player && !this.players[player].stayed;
+    return (
+      this.phase === 'playing' &&
+      this.currentTurn === player &&
+      !this.players[player].stayed &&
+      !this.isBusted(player)
+    );
   }
 
   getState(perspective) {
@@ -441,7 +469,8 @@ export class GameEngine {
         trumpCards: [...this.players[perspective].trumpCards],
         lives: this.players[perspective].lives,
         stayed: this.players[perspective].stayed,
-        total: this.getHandTotal(perspective)
+        total: this.getHandTotal(perspective),
+        busted: this.isBusted(perspective),
       },
       opponent: {
         faceDown: isRevealed ? this.players[opponent].faceDown : null,

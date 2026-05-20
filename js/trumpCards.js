@@ -634,32 +634,28 @@ export const TRUMP_CARD_TYPES = {
   }
 };
 
-/** Drawn from deck / random trump gains — not sold in shop as +/++ exclusives */
+/** Draw pile — multiple copies so players can hold several different trumps over a match */
 export const TRUMP_DECK_COMPOSITION = [
-  'plus_1', 'plus_1',
-  'plus_2', 'plus_2',
-  'plus_3', 'plus_3',
-  'minus_1', 'minus_1',
-  'minus_2', 'minus_2',
+  'plus_1', 'plus_1', 'plus_1',
+  'plus_2', 'plus_2', 'plus_2',
+  'plus_3', 'plus_3', 'plus_3',
+  'minus_1', 'minus_1', 'minus_1',
+  'minus_2', 'minus_2', 'minus_2',
   'minus_3', 'minus_3',
-  'one_up', 'two_up',
-  'draw_2', 'draw_3', 'draw_4', 'draw_5', 'draw_6', 'draw_7',
-  'remove', 'return_last', 'return_card',
-  'exchange',
-  'love_your_enemy',
-  'body_bag', 'steal', 'transfer',
-  'trump_switch',
-  'shield',
-  'destroy',
-  'perfect_draw', 'perfect_draw',
-  'ultimate_draw',
-  'go_for_17', 'go_for_17',
-  'go_for_24', 'go_for_24',
-  'go_for_27', 'go_for_27',
-  'harvest',
-  'speed_loader',
-  'double_down',
-  'change'
+  'one_up', 'one_up', 'two_up', 'two_up',
+  'draw_2', 'draw_2', 'draw_3', 'draw_3', 'draw_4', 'draw_4',
+  'draw_5', 'draw_5', 'draw_6', 'draw_6', 'draw_7', 'draw_7',
+  'remove', 'remove', 'return_last', 'return_last', 'return_card', 'return_card',
+  'exchange', 'exchange',
+  'love_your_enemy', 'love_your_enemy', 'body_bag', 'steal', 'steal', 'transfer',
+  'trump_switch', 'trump_switch',
+  'shield', 'shield', 'destroy', 'destroy',
+  'perfect_draw', 'perfect_draw', 'ultimate_draw', 'ultimate_draw',
+  'go_for_17', 'go_for_17', 'go_for_17',
+  'go_for_24', 'go_for_24', 'go_for_24',
+  'go_for_27', 'go_for_27', 'go_for_27',
+  'harvest', 'harvest', 'speed_loader', 'speed_loader',
+  'double_down', 'double_down', 'change', 'change',
 ];
 
 /** Shop-only upgraded trumps (+) — never in the draw deck */
