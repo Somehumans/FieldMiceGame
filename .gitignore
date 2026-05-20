@@ -14,3 +14,10 @@ New-mice-cards/
 .DS_Store
 Thumbs.db
 *.log
+
+# wrangler files
+.wrangler
+.dev.vars*
+!.dev.vars.example
+.env*
+!.env.example
