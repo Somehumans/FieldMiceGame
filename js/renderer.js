@@ -118,11 +118,31 @@ export class Renderer {
     });
   }
 
+  isMobileHandLayout() {
+    return typeof window !== 'undefined' && window.matchMedia('(max-width: 700px)').matches;
+  }
+
+  /** Mobile: >3 cards → two rows of up to 3, sized to fit column width. */
+  fitCardRowWrap(rowEl, n, avail, baseW, baseH) {
+    const perRow = 3;
+    const gap = 6;
+    const maxW = Math.floor(baseW * 0.78);
+    const minW = 52;
+    let w = Math.floor((avail - (perRow - 1) * gap) / perRow);
+    w = Math.max(minW, Math.min(maxW, w));
+    const h = Math.floor(w * (baseH / baseW));
+    rowEl.classList.add('card-row--wrap');
+    rowEl.style.setProperty('--row-card-w', `${w}px`);
+    rowEl.style.setProperty('--row-card-h', `${h}px`);
+    rowEl.dataset.wrapRows = String(Math.ceil(n / perRow));
+  }
+
   fitCardRow(rowEl) {
     if (!rowEl) return;
 
-    rowEl.classList.remove('card-row--overlap');
+    rowEl.classList.remove('card-row--overlap', 'card-row--wrap');
     rowEl.style.removeProperty('--card-overlap');
+    delete rowEl.dataset.wrapRows;
 
     const cards = rowEl.querySelectorAll('.card');
     const n = cards.length;
@@ -142,22 +162,39 @@ export class Renderer {
     const baseH = parseFloat(root.getPropertyValue('--play-card-h')) || 182;
     const gap = parseFloat(getComputedStyle(rowEl).gap) || 12;
     const parent = this.el.centerCol || rowEl.parentElement;
-    const avail = (parent?.clientWidth ?? 0) - 12;
+    const avail = Math.max(0, (rowEl.clientWidth || parent?.clientWidth || 0) - 8);
     if (avail <= 0) return;
+
+    if (this.isMobileHandLayout() && n > 3) {
+      this.fitCardRowWrap(rowEl, n, avail, baseW, baseH);
+      return;
+    }
 
     const needed = n * baseW + Math.max(0, n - 1) * gap;
 
-    // Row fits at default size — always use full-size cards (e.g. new round with fewer cards).
     if (needed <= avail) {
       rowEl.style.removeProperty('--row-card-w');
       rowEl.style.removeProperty('--row-card-h');
       return;
     }
 
-    // Same card count: keep current size; don't re-shrink on every resize (fixes mobile shrink loop).
-    if (!countChanged) return;
+    if (!countChanged && !rowEl.classList.contains('card-row--overlap')) {
+      const hasCustom = rowEl.style.getPropertyValue('--row-card-w');
+      if (hasCustom && rowEl.scrollWidth <= rowEl.clientWidth + 4) return;
+    }
+    if (!countChanged && rowEl.classList.contains('card-row--overlap')) {
+      if (rowEl.scrollWidth <= rowEl.clientWidth + 4) return;
+    }
 
-    const minScale = 0.55;
+    if (this.isMobileHandLayout() && n <= 3) {
+      const w = Math.max(52, Math.floor((avail - Math.max(0, n - 1) * gap) / n));
+      const h = Math.floor(w * (baseH / baseW));
+      rowEl.style.setProperty('--row-card-w', `${w}px`);
+      rowEl.style.setProperty('--row-card-h', `${h}px`);
+      return;
+    }
+
+    const minScale = 0.58;
     let scale = avail / needed;
     scale = Math.max(minScale, Math.min(1, scale));
 
@@ -315,11 +352,12 @@ export class Renderer {
 
   resetCardRowLayout(rowEl) {
     if (!rowEl) return;
-    rowEl.classList.remove('card-row--overlap');
+    rowEl.classList.remove('card-row--overlap', 'card-row--wrap');
     rowEl.style.removeProperty('--card-overlap');
     rowEl.style.removeProperty('--row-card-w');
     rowEl.style.removeProperty('--row-card-h');
     delete rowEl.dataset.fitCardCount;
+    delete rowEl.dataset.wrapRows;
   }
 
   renderOpponentCards(data) {

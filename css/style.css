@@ -2285,6 +2285,40 @@ body {
 }
 
 @media (max-width: 700px) {
+  #center-col {
+    overflow-x: visible;
+    overflow-y: visible;
+    transform: none;
+    perspective: none;
+  }
+
+  #center-col .card,
+  #center-col .card:hover {
+    transform: none !important;
+  }
+
+  /* More than 3 cards: wrap to a second row (3 per row), compact size from JS */
+  .card-row--wrap {
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+    gap: 6px;
+    row-gap: 6px;
+    max-width: 100%;
+    overflow: visible;
+    min-height: calc(var(--row-card-h, 100px) * 2 + 14px);
+  }
+
+  .card-row--wrap .card {
+    flex-shrink: 0;
+    margin-left: 0 !important;
+  }
+
+  .card-row--wrap.card-row--overlap .card + .card {
+    margin-left: 0 !important;
+  }
+
   :root {
     --col-left: 118px;
     --col-right: 124px;
