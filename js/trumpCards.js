@@ -686,7 +686,7 @@ export function getShopTrumpTier(id) {
 }
 
 /** One shop slot offer (deck card, + exclusive, or rare ++). */
-export function drawShopTrumpOffer() {
+export function drawShopTrumpOffer(drawPool = TRUMP_DECK_COMPOSITION) {
   const r = Math.random();
   if (r < SHOP_PLUS_PLUS_CHANCE) {
     return SHOP_EXCLUSIVE_PLUS_PLUS[Math.floor(Math.random() * SHOP_EXCLUSIVE_PLUS_PLUS.length)];
@@ -694,7 +694,8 @@ export function drawShopTrumpOffer() {
   if (r < SHOP_PLUS_PLUS_CHANCE + SHOP_PLUS_CHANCE) {
     return SHOP_EXCLUSIVE_PLUS[Math.floor(Math.random() * SHOP_EXCLUSIVE_PLUS.length)];
   }
-  return TRUMP_DECK_COMPOSITION[Math.floor(Math.random() * TRUMP_DECK_COMPOSITION.length)];
+  const pool = drawPool?.length ? drawPool : TRUMP_DECK_COMPOSITION;
+  return pool[Math.floor(Math.random() * pool.length)];
 }
 
 export function shuffleArray(arr) {
@@ -706,8 +707,10 @@ export function shuffleArray(arr) {
   return a;
 }
 
-export function createTrumpDeck() {
-  return shuffleArray(TRUMP_DECK_COMPOSITION);
+export function createTrumpDeck(composition) {
+  const pool =
+    Array.isArray(composition) && composition.length ? composition : TRUMP_DECK_COMPOSITION;
+  return shuffleArray([...pool]);
 }
 
 /* --- In-game trump reference sheet --- */
@@ -727,6 +730,11 @@ const TRUMP_REF_ORDER = [
   'harvest',
   'speed_loader', 'double_down', 'change',
 ];
+
+const DRAW_DECK_IDS = new Set(TRUMP_DECK_COMPOSITION);
+
+/** Trump types hosts can add/remove in Practice / Create Room (draw pile only, not shop exclusives) */
+export const CONFIGURABLE_TRUMP_ORDER = TRUMP_REF_ORDER.filter((id) => DRAW_DECK_IDS.has(id));
 
 function trumpRefMeta(id) {
   if (SHOP_EXCLUSIVE_PLUS_PLUS.includes(id)) {

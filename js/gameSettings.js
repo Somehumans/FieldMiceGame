@@ -1,12 +1,15 @@
 /** Match settings — lobby → game (practice + online host) */
 
-/** Standard 21 deck: one of each value 1–11 */
-export const DEFAULT_DECK_CARDS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+import { TRUMP_DECK_COMPOSITION, CONFIGURABLE_TRUMP_ORDER } from './trumpCards.js';
 
-export const DECK_LIMITS = {
-  minTotal: 8,
-  maxTotal: 44,
-  maxPerValue: 4,
+export const DEFAULT_TRUMP_DECK = [...TRUMP_DECK_COMPOSITION];
+
+const VALID_TRUMP_IDS = new Set(CONFIGURABLE_TRUMP_ORDER);
+
+export const TRUMP_DECK_LIMITS = {
+  minTotal: 16,
+  maxTotal: 120,
+  maxPerCard: 4,
 };
 
 export const DEFAULT_GAME_SETTINGS = {
@@ -14,7 +17,7 @@ export const DEFAULT_GAME_SETTINGS = {
   trumpDrawChance: 50,
   turnTimeLimitSec: 25,
   startingLives: 9,
-  deckCards: [...DEFAULT_DECK_CARDS],
+  trumpDeckComposition: [...DEFAULT_TRUMP_DECK],
 };
 
 export const SETTINGS_LIMITS = {
@@ -23,47 +26,50 @@ export const SETTINGS_LIMITS = {
   startingLives: { min: 3, max: 15, step: 1 },
 };
 
-export function deckCountsFromCards(cards) {
+export function trumpCountsFromComposition(composition) {
   const counts = {};
-  for (let v = 1; v <= 11; v++) counts[v] = 0;
-  for (const raw of cards || []) {
-    const v = Math.round(Number(raw));
-    if (v >= 1 && v <= 11) counts[v]++;
+  for (const id of CONFIGURABLE_TRUMP_ORDER) counts[id] = 0;
+  for (const raw of composition || []) {
+    const id = String(raw);
+    if (VALID_TRUMP_IDS.has(id)) counts[id]++;
   }
   return counts;
 }
 
-export function deckCardsFromCounts(counts) {
+export function trumpCompositionFromCounts(counts) {
   const cards = [];
-  for (let v = 1; v <= 11; v++) {
+  for (const id of CONFIGURABLE_TRUMP_ORDER) {
     const n = clamp(
-      Math.round(Number(counts[v]) || 0),
+      Math.round(Number(counts[id]) || 0),
       0,
-      DECK_LIMITS.maxPerValue
+      TRUMP_DECK_LIMITS.maxPerCard
     );
-    for (let i = 0; i < n; i++) cards.push(v);
+    for (let i = 0; i < n; i++) cards.push(id);
   }
   return cards;
 }
 
-export function normalizeDeckCards(raw) {
+export function normalizeTrumpDeckComposition(raw) {
   let cards = [];
   if (Array.isArray(raw)) {
-    cards = deckCardsFromCounts(deckCountsFromCards(raw));
+    cards = trumpCompositionFromCounts(trumpCountsFromComposition(raw));
   }
-  if (cards.length < DECK_LIMITS.minTotal) {
-    return [...DEFAULT_DECK_CARDS];
+  if (cards.length < TRUMP_DECK_LIMITS.minTotal) {
+    return [...DEFAULT_TRUMP_DECK];
   }
-  if (cards.length > DECK_LIMITS.maxTotal) {
-    return cards.slice(0, DECK_LIMITS.maxTotal);
+  if (cards.length > TRUMP_DECK_LIMITS.maxTotal) {
+    return cards.slice(0, TRUMP_DECK_LIMITS.maxTotal);
   }
   return cards;
 }
 
-export function isDeckValid(cards) {
-  const n = normalizeDeckCards(cards).length;
-  const rawLen = Array.isArray(cards) ? deckCardsFromCounts(deckCountsFromCards(cards)).length : 0;
-  return rawLen >= DECK_LIMITS.minTotal && rawLen <= DECK_LIMITS.maxTotal;
+export function isTrumpDeckValid(composition) {
+  const rawLen = Array.isArray(composition)
+    ? trumpCompositionFromCounts(trumpCountsFromComposition(composition)).length
+    : 0;
+  return (
+    rawLen >= TRUMP_DECK_LIMITS.minTotal && rawLen <= TRUMP_DECK_LIMITS.maxTotal
+  );
 }
 
 const STORAGE_KEY = 'fieldmice_game_settings';
@@ -86,9 +92,14 @@ export function normalizeSettings(raw = {}) {
     SETTINGS_LIMITS.startingLives.min,
     SETTINGS_LIMITS.startingLives.max
   );
-  if (Object.prototype.hasOwnProperty.call(raw, 'deckCards')) {
-    s.deckCards = normalizeDeckCards(raw.deckCards);
+  if (
+    Object.prototype.hasOwnProperty.call(raw, 'trumpDeckComposition') ||
+    Object.prototype.hasOwnProperty.call(raw, 'deckCards')
+  ) {
+    const pile = raw.trumpDeckComposition ?? raw.deckCards;
+    s.trumpDeckComposition = normalizeTrumpDeckComposition(pile);
   }
+  delete s.deckCards;
   return s;
 }
 
@@ -133,6 +144,6 @@ export function settingsForEngine(settings) {
     trumpDrawChance: s.trumpDrawChance / 100,
     turnTimeLimitSec: s.turnTimeLimitSec,
     startingLives: s.startingLives,
-    deckCards: [...s.deckCards],
+    trumpDeckComposition: [...s.trumpDeckComposition],
   };
 }

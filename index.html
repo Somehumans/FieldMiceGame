@@ -437,7 +437,7 @@
       box-shadow: 0 3px 0 var(--purple-dark);
     }
 
-    .settings-deck-head {
+    .settings-trump-head {
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -445,18 +445,18 @@
       margin-bottom: 8px;
     }
 
-    .settings-deck-head label {
+    .settings-trump-head label {
       font-size: 0.92rem;
       font-weight: 600;
       margin: 0;
     }
 
-    .settings-deck-head span {
+    .settings-trump-head span {
       font-weight: 700;
       color: var(--purple-deeper);
     }
 
-    .settings-deck-reset {
+    .settings-trump-reset {
       font-size: 0.78rem;
       font-weight: 600;
       padding: 4px 10px;
@@ -467,45 +467,75 @@
       cursor: pointer;
     }
 
-    .settings-deck-reset:hover {
+    .settings-trump-reset:hover {
       color: var(--text-dark);
       border-color: var(--purple-deeper);
     }
 
-    .settings-deck-editor {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 6px 10px;
+    .settings-trump-filter {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+    }
+
+    .settings-trump-filter-btn {
+      flex: 1;
+      min-width: 0;
+      padding: 6px 8px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      border: 2px solid var(--sage-border);
+      border-radius: 8px;
+      background: var(--cream-light);
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+
+    .settings-trump-filter-btn.active {
+      background: var(--purple-deeper);
+      border-color: var(--purple-deeper);
+      color: var(--cream-light);
+    }
+
+    .settings-trump-editor {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
       padding: 10px;
       background: rgba(122, 90, 168, 0.08);
       border: 2px solid rgba(122, 90, 168, 0.2);
       border-radius: 10px;
-      max-height: 220px;
+      max-height: 240px;
       overflow-y: auto;
     }
 
-    .settings-deck-row {
+    .settings-trump-row {
       display: grid;
-      grid-template-columns: 28px 18px 28px 22px 28px;
+      grid-template-columns: 28px 1fr 28px 22px 28px;
       align-items: center;
-      gap: 4px;
+      gap: 6px;
     }
 
-    .settings-deck-thumb {
+    .settings-trump-row.hidden {
+      display: none;
+    }
+
+    .settings-trump-thumb {
       width: 28px;
       height: auto;
       border-radius: 3px;
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
     }
 
-    .settings-deck-label {
-      font-size: 0.82rem;
-      font-weight: 700;
-      text-align: center;
-      color: var(--purple-deeper);
+    .settings-trump-label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-dark);
+      line-height: 1.2;
     }
 
-    .settings-deck-btn {
+    .settings-trump-btn {
       width: 28px;
       height: 28px;
       padding: 0;
@@ -519,30 +549,30 @@
       cursor: pointer;
     }
 
-    .settings-deck-btn:hover:not(:disabled) {
+    .settings-trump-btn:hover:not(:disabled) {
       background: var(--purple-bg);
       border-color: var(--purple-deeper);
     }
 
-    .settings-deck-btn:disabled {
+    .settings-trump-btn:disabled {
       opacity: 0.35;
       cursor: not-allowed;
     }
 
-    .settings-deck-count {
+    .settings-trump-count {
       font-size: 0.9rem;
       font-weight: 700;
       text-align: center;
     }
 
-    .settings-deck-hint {
+    .settings-trump-hint {
       font-size: 0.76rem;
       color: var(--text-muted);
       margin: 6px 0 0;
       line-height: 1.35;
     }
 
-    .settings-deck-hint--warn {
+    .settings-trump-hint--warn {
       color: #a63d2a;
       font-weight: 600;
     }
@@ -665,15 +695,20 @@
       </div>
 
       <div class="settings-field">
-        <div class="settings-deck-head">
-          <label for="settings-deck-editor">
-            <span>Deck</span>
-            <span id="settings-deck-total">11 cards</span>
+        <div class="settings-trump-head">
+          <label for="settings-trump-editor">
+            <span>Trump pile</span>
+            <span id="settings-trump-total">81 trumps</span>
           </label>
-          <button type="button" class="settings-deck-reset" id="settings-deck-reset">Reset</button>
+          <button type="button" class="settings-trump-reset" id="settings-trump-reset">Reset</button>
         </div>
-        <div id="settings-deck-editor" class="settings-deck-editor" role="group" aria-label="Deck composition"></div>
-        <p id="settings-deck-hint" class="settings-deck-hint">Each value can appear up to 4 times.</p>
+        <div id="settings-trump-filter" class="settings-trump-filter" role="group" aria-label="Filter trump cards">
+          <button type="button" class="settings-trump-filter-btn active" data-trump-filter="all" aria-pressed="true">All</button>
+          <button type="button" class="settings-trump-filter-btn" data-trump-filter="modifier" aria-pressed="false">Modifiers</button>
+          <button type="button" class="settings-trump-filter-btn" data-trump-filter="action" aria-pressed="false">Actions</button>
+        </div>
+        <div id="settings-trump-editor" class="settings-trump-editor" role="group" aria-label="Trump pile composition"></div>
+        <p id="settings-trump-hint" class="settings-trump-hint">Add or remove trumps from the draw pile. Numbered cards stay 1–11.</p>
       </div>
 
       <div class="settings-actions">

@@ -6,11 +6,7 @@ import {
   SHOP_EXCLUSIVE_PLUS_PLUS,
   getShopTrumpTier
 } from './trumpCards.js';
-import {
-  DEFAULT_GAME_SETTINGS,
-  DEFAULT_DECK_CARDS,
-  normalizeSettings,
-} from './gameSettings.js';
+import { DEFAULT_GAME_SETTINGS, normalizeSettings } from './gameSettings.js';
 
 /** Default starting Micecoin balance (overridden by match settings) */
 export const STARTING_LIVES = DEFAULT_GAME_SETTINGS.startingLives;
@@ -21,7 +17,7 @@ export class GameEngine {
     this.settings = { ...DEFAULT_GAME_SETTINGS };
     this.trumpDrawChance = DEFAULT_GAME_SETTINGS.trumpDrawChance / 100;
     this.startingLives = DEFAULT_GAME_SETTINGS.startingLives;
-    this.deckCards = [...DEFAULT_DECK_CARDS];
+    this.trumpDeckComposition = [...DEFAULT_GAME_SETTINGS.trumpDeckComposition];
     this.reset();
   }
 
@@ -29,7 +25,7 @@ export class GameEngine {
     this.settings = normalizeSettings(settings);
     this.trumpDrawChance = this.settings.trumpDrawChance / 100;
     this.startingLives = this.settings.startingLives;
-    this.deckCards = [...this.settings.deckCards];
+    this.trumpDeckComposition = [...this.settings.trumpDeckComposition];
   }
 
   reset() {
@@ -86,8 +82,7 @@ export class GameEngine {
   }
 
   createDeck() {
-    const source = this.deckCards?.length ? this.deckCards : DEFAULT_DECK_CARDS;
-    this.deck = shuffleArray([...source]);
+    this.deck = shuffleArray([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
   }
 
   drawCard() {
@@ -97,7 +92,7 @@ export class GameEngine {
 
   drawTrumpCard() {
     if (this.trumpDeck.length === 0) {
-      this.trumpDeck = createTrumpDeck();
+      this.trumpDeck = createTrumpDeck(this.trumpDeckComposition);
     }
     return this.trumpDeck.pop();
   }
@@ -117,7 +112,7 @@ export class GameEngine {
   generateShop() {
     this.shop = [];
     for (let i = 0; i < 3; i++) {
-      const card = drawShopTrumpOffer();
+      const card = drawShopTrumpOffer(this.trumpDeckComposition);
       this.shop.push({ id: card, cost: this.getTrumpCardCost(card), sold: false });
     }
     this.emit('shopUpdated', { shop: this.getShopState() });
@@ -178,7 +173,7 @@ export class GameEngine {
     for (const role of ['host', 'guest']) {
       this.players[role].lives = this.startingLives;
     }
-    this.trumpDeck = createTrumpDeck();
+    this.trumpDeck = createTrumpDeck(this.trumpDeckComposition);
     this.startNewRound({ force: true });
   }
 
@@ -190,7 +185,7 @@ export class GameEngine {
 
     this.roundNumber++;
     this.createDeck();
-    this.trumpDeck = createTrumpDeck();
+    this.trumpDeck = createTrumpDeck(this.trumpDeckComposition);
     this.targetValue = 21;
     this.goForTarget = null;
     this.roundStakes = this.roundNumber;
