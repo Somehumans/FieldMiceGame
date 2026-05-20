@@ -1,0 +1,36 @@
+# Pings Supabase every 3 days so the free-tier project is not paused for inactivity.
+# Add repo secrets: SUPABASE_URL, SUPABASE_ANON_KEY (same values as js/config.js)
+
+name: Supabase keepalive
+
+on:
+  schedule:
+    # Noon UTC every 3 days
+    - cron: '0 12 */3 * *'
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run cleanup_stale_rooms (DB activity + tidy old rooms)
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        run: |
+          if [ -z "$SUPABASE_URL" ] || [ -z "$SUPABASE_ANON_KEY" ]; then
+            echo "::error::Add SUPABASE_URL and SUPABASE_ANON_KEY in repo Settings → Secrets → Actions"
+            exit 1
+          fi
+          code=$(curl -sS -o /tmp/supabase-keepalive-out.txt -w "%{http_code}" -X POST \
+            "${SUPABASE_URL}/rest/v1/rpc/cleanup_stale_rooms" \
+            -H "apikey: ${SUPABASE_ANON_KEY}" \
+            -H "Authorization: Bearer ${SUPABASE_ANON_KEY}" \
+            -H "Content-Type: application/json")
+          echo "HTTP $code"
+          cat /tmp/supabase-keepalive-out.txt || true
+          if [ "$code" -lt 200 ] || [ "$code" -ge 300 ]; then
+            echo "::error::Supabase ping failed"
+            exit 1
+          fi
+          echo "Supabase keepalive OK"
