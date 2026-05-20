@@ -133,19 +133,6 @@ body {
     inset 0 1px 0 rgba(255, 255, 255, 0.12);
 }
 
-.opp-trump-stack.has-trumps .opp-trump-chip::after {
-  content: '🃏';
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  font-size: calc(var(--opp-trump-chip-h) * 0.34);
-  line-height: 1;
-  opacity: 0.92;
-  pointer-events: none;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.55);
-}
-
 /* Player trump count — mobile hint above your trump fan */
 .trump-hand-badge {
   display: none;
