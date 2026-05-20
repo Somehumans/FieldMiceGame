@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Play Field Mice - 21 | Online Card Game</title>
-  <meta name="description" content="Play a Field Mice - 21 match online or practice against the CPU. Hit, stay, trump cards, and rising heart stakes.">
+  <meta name="description" content="Play a Field Mice - 21 match online or practice against the CPU. Hit, stay, trump cards, and rising Micecoin stakes.">
   <meta name="keywords" content="fieldmice, field mice, field mice 21, play field mice, card game online">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://somehumans.github.io/21/game.html">
@@ -70,6 +70,7 @@
     <div id="opponent-fan-area">
       <div class="opp-trump-stack">
         <span class="opp-trump-label">Enemy trumps</span>
+        <span class="opp-trump-count hidden" aria-hidden="true">0</span>
         <div id="opponent-trump-fan" class="opp-fan"></div>
       </div>
     </div>
@@ -138,6 +139,7 @@
 
       <!-- Player trumps live inside table surface -->
       <div id="trump-hand-area">
+        <span id="trump-hand-badge" class="trump-hand-badge hidden" aria-live="polite"></span>
         <div id="trump-hand" class="trump-hand-fan"></div>
       </div>
     </div>
@@ -236,6 +238,7 @@
         </div>
         <button class="game-btn draw-btn" id="resume-btn">Resume</button>
         <button type="button" class="game-btn keep-btn" id="tutorial-btn">How to Play</button>
+        <button type="button" class="game-btn keep-btn" data-trump-ref-open>Trump Cards</button>
         <button class="game-btn keep-btn" id="quit-btn">Quit to Lobby</button>
       </div>
     </div>
@@ -251,6 +254,17 @@
         <div class="trump-play-name"></div>
         <p class="trump-play-desc"></p>
       </div>
+    </div>
+  </div>
+
+  <div id="trump-ref-overlay" class="overlay trump-ref-overlay hidden" aria-hidden="true" role="dialog" aria-labelledby="trump-ref-title">
+    <div class="overlay-box trump-ref-box">
+      <header class="trump-ref-header">
+        <h2 id="trump-ref-title">Trump Card Reference</h2>
+        <button type="button" id="trump-ref-close" class="game-btn keep-btn trump-ref-close">Close</button>
+      </header>
+      <p class="trump-ref-intro">Special power cards you can draw during a match. Modifiers change totals; actions change cards or rules.</p>
+      <div id="trump-ref-grid" class="trump-ref-grid"></div>
     </div>
   </div>
 

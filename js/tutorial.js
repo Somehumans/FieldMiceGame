@@ -51,14 +51,14 @@ export const GAME_TUTORIAL_STEPS = [
   },
   {
     title: 'The shop',
-    body: 'From round 2 onward, open the <strong>Shop</strong> once per turn. Spend hearts to buy extra trump cards.',
+    body: 'From round 2 onward, open the <strong>Shop</strong> once per turn. Spend MC to buy extra trump cards.',
     selector: '#shop-btn',
     placement: 'right',
     skipIfHidden: true,
   },
   {
-    title: 'Your hearts',
-    body: 'Hearts are your lives. Lose a round and you pay the bet in hearts. Run out and the match is over!',
+    title: 'Your Micecoin',
+    body: 'MC is your betting currency. Win a round and you collect the bet from your opponent. Lose and you pay up. Run out of MC and the match is over!',
     selector: '.player-profile .profile-avatar',
     placement: 'right',
     rounded: true,
@@ -78,7 +78,7 @@ export const GAME_TUTORIAL_STEPS = [
   },
   {
     title: 'Rising stakes',
-    body: 'This shows the <strong>round bet</strong> — how many hearts the loser pays. It goes up each round (round 1 = 1 heart, round 2 = 2, and so on).',
+    body: 'This shows the <strong>round bet</strong> — how much MC the loser pays (and the winner collects). It goes up each round (round 1 = 1 MC, round 2 = 2, and so on).',
     selector: '#round-stakes-wrap',
     placement: 'left',
   },

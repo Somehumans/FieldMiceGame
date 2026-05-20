@@ -465,6 +465,7 @@
       <button class="menu-btn" id="btn-show-join">Find Room</button>
       <button class="menu-btn" id="btn-play-ai">Practice</button>
       <button class="menu-btn" id="btn-how-to-play">How to Play</button>
+      <button type="button" class="menu-btn" data-trump-ref-open>Trump Cards</button>
     </div>
 
     <div id="join-section" class="join-section">
@@ -487,6 +488,17 @@
       <p class="waiting-text">Waiting for opponent...</p>
       <button type="button" class="menu-btn" id="btn-enter-match" disabled>Enter match</button>
       <button class="menu-btn btn-cancel-join" id="btn-cancel-room">Cancel</button>
+    </div>
+  </div>
+
+  <div id="trump-ref-overlay" class="overlay trump-ref-overlay hidden" aria-hidden="true" role="dialog" aria-labelledby="trump-ref-title">
+    <div class="overlay-box trump-ref-box">
+      <header class="trump-ref-header">
+        <h2 id="trump-ref-title">Trump Card Reference</h2>
+        <button type="button" id="trump-ref-close" class="game-btn keep-btn trump-ref-close">Close</button>
+      </header>
+      <p class="trump-ref-intro">Special power cards you can draw during a match. Modifiers change totals; actions change cards or rules.</p>
+      <div id="trump-ref-grid" class="trump-ref-grid"></div>
     </div>
   </div>
 
@@ -531,7 +543,7 @@
 
       <div class="settings-field">
         <label for="settings-lives">
-          <span>Starting hearts</span>
+          <span>Starting MC</span>
           <span id="settings-lives-val">9</span>
         </label>
         <input type="range" id="settings-lives" min="3" max="15" step="1" value="9">

@@ -121,6 +121,40 @@ body {
   flex-shrink: 0;
 }
 
+.opp-trump-count {
+  display: none;
+}
+
+.opp-trump-stack.has-trumps .opp-trump-chip {
+  border-color: #e8c86a;
+  box-shadow:
+    0 2px 0 rgba(0, 0, 0, 0.65),
+    0 0 10px rgba(232, 180, 80, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+.opp-trump-stack.has-trumps .opp-trump-chip::after {
+  content: '🃏';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-size: calc(var(--opp-trump-chip-h) * 0.34);
+  line-height: 1;
+  opacity: 0.92;
+  pointer-events: none;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.55);
+}
+
+/* Player trump count — mobile hint above your trump fan */
+.trump-hand-badge {
+  display: none;
+}
+
+#trump-hand-area.has-trumps .trump-hand-fan .card {
+  box-shadow: 0 0 14px rgba(160, 120, 220, 0.45);
+}
+
 .opp-fan {
   display: flex;
   flex-direction: row;
@@ -496,6 +530,98 @@ body {
   max-width: 100%;
 }
 
+/* Micecoin (MC) — fixed viewport, one centered frame at a time */
+.mc-coin-wrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  overflow: hidden;
+  line-height: 0;
+  vertical-align: middle;
+}
+
+.mc-coin-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+.mc-coin-wrap.mc-coin--balance {
+  width: 22px;
+  height: 22px;
+}
+
+.mc-coin-wrap.mc-coin--sm {
+  width: 16px;
+  height: 16px;
+}
+
+.mc-balance-wrap {
+  min-height: 26px;
+}
+
+.mc-balance {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(14, 8, 24, 0.55);
+  border: 1px solid rgba(255, 215, 80, 0.25);
+}
+
+.mc-amount {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #ffd54a;
+  line-height: 1;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
+}
+
+.mc-label {
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  color: rgba(255, 215, 80, 0.75);
+  line-height: 1;
+}
+
+.mc-balance--losing {
+  animation: mcBalanceLose 0.55s ease forwards;
+}
+
+@keyframes mcBalanceLose {
+  0% { transform: scale(1); filter: none; }
+  35% { transform: scale(1.08); filter: brightness(1.2); }
+  100% { transform: scale(1); filter: none; }
+}
+
+.mc-stakes-row {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 2px 3px;
+}
+
+.mc-stakes-label {
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: #c89020;
+  margin-left: 2px;
+}
+
+.mc-stakes-overflow {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #a07018;
+}
+
 .life-heart {
   width: 15px;
   height: 15px;
@@ -769,11 +895,11 @@ body {
   min-height: 1.25rem;
 }
 
-.round-stakes-hearts .hearts-inline-row {
+.round-stakes-hearts .mc-stakes-row {
   gap: 2px;
 }
 
-.round-stakes-hearts .hearts-inline--stakes {
+.round-stakes-hearts .mc-coin-wrap.mc-coin--sm {
   width: 18px;
   height: 18px;
 }
@@ -1367,14 +1493,13 @@ body {
   gap: 4px;
 }
 
-.round-end-hearts .hearts-inline--full {
-  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.5));
+.round-end-hearts .mc-balance {
+  background: rgba(0, 0, 0, 0.35);
+  border-color: rgba(255, 215, 80, 0.35);
 }
 
-.round-end-hearts .hearts-inline--empty {
-  color: rgba(210, 130, 140, 0.9);
-  opacity: 0.75;
-  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.45));
+.round-end-hearts .mc-amount {
+  font-size: 1.1rem;
 }
 
 .round-end-hearts-label {
@@ -1520,6 +1645,217 @@ body {
 .mobile-pc-warning__btn {
   width: 100%;
   max-width: 280px;
+}
+
+/* Trump card reference sheet */
+.trump-ref-overlay {
+  z-index: 110;
+  align-items: flex-start;
+  padding: 16px 12px;
+  overflow-y: auto;
+}
+
+.trump-ref-box {
+  max-width: min(920px, 96vw);
+  width: 100%;
+  max-height: min(88vh, 900px);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 22px 18px;
+  text-align: left;
+}
+
+.trump-ref-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+  flex-shrink: 0;
+}
+
+.trump-ref-header h2 {
+  margin: 0;
+  font-size: 1.35rem;
+  color: var(--text-dark);
+}
+
+.trump-ref-close {
+  flex-shrink: 0;
+  padding: 6px 16px;
+  font-size: 0.85rem;
+}
+
+.trump-ref-intro {
+  margin: 0 0 14px;
+  font-size: 0.82rem;
+  line-height: 1.45;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.trump-ref-grid {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px;
+  padding-right: 4px;
+}
+
+.trump-ref-card {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 10px;
+  border-radius: 10px;
+  border: 2px solid rgba(106, 80, 160, 0.35);
+  background: rgba(255, 255, 255, 0.55);
+}
+
+.trump-ref-card--modifier {
+  border-color: rgba(200, 120, 60, 0.45);
+  background: linear-gradient(135deg, rgba(255, 248, 235, 0.9) 0%, rgba(255, 255, 255, 0.65) 100%);
+}
+
+.trump-ref-card--action {
+  border-color: rgba(106, 80, 160, 0.5);
+  background: linear-gradient(135deg, rgba(240, 232, 255, 0.95) 0%, rgba(255, 255, 255, 0.7) 100%);
+}
+
+.trump-ref-thumb {
+  flex-shrink: 0;
+  width: 52px;
+  height: 72px;
+  border-radius: 5px;
+  overflow: hidden;
+  border: 2px solid #e8c86a;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.trump-ref-thumb img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.trump-ref-meta {
+  min-width: 0;
+  flex: 1;
+}
+
+.trump-ref-name {
+  margin: 0 0 4px;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--purple-deeper);
+  line-height: 1.2;
+}
+
+.trump-ref-desc {
+  margin: 0 0 8px;
+  font-size: 0.78rem;
+  line-height: 1.4;
+  color: var(--text-dark);
+}
+
+.trump-ref-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.trump-ref-tag {
+  font-size: 0.62rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 3px 7px;
+  border-radius: 999px;
+  background: rgba(106, 80, 160, 0.15);
+  color: var(--purple-deeper);
+  line-height: 1.2;
+}
+
+.trump-ref-tag--category {
+  background: rgba(106, 80, 160, 0.22);
+}
+
+.trump-ref-card--modifier .trump-ref-tag--category {
+  background: rgba(200, 130, 50, 0.25);
+  color: #6a4020;
+}
+
+.trump-ref-tag--target {
+  background: rgba(180, 60, 80, 0.18);
+  color: #6a2030;
+}
+
+.trump-ref-tag--shop {
+  background: rgba(90, 140, 220, 0.22);
+  color: #2a4a78;
+}
+
+.trump-ref-tag--plus {
+  background: rgba(200, 150, 50, 0.28);
+  color: #5a4018;
+}
+
+.trump-ref-tag--rare {
+  background: linear-gradient(180deg, rgba(220, 80, 120, 0.35), rgba(140, 60, 180, 0.35));
+  color: #4a1848;
+}
+
+.shop-item-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.shop-item-tier {
+  font-size: 0.62rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 3px 7px;
+  border-radius: 999px;
+  flex-shrink: 0;
+}
+
+.shop-item-tier--plus {
+  background: rgba(200, 150, 50, 0.35);
+  color: #4a3810;
+}
+
+.shop-item-tier--pp {
+  background: linear-gradient(180deg, rgba(255, 200, 100, 0.5), rgba(200, 80, 160, 0.45));
+  color: #3a1038;
+  box-shadow: 0 0 10px rgba(220, 120, 200, 0.35);
+}
+
+.shop-item--plusplus {
+  border-color: rgba(180, 90, 200, 0.55);
+  box-shadow: 0 0 14px rgba(180, 90, 200, 0.2);
+}
+
+@media (max-width: 520px) {
+  .trump-ref-box {
+    padding: 16px 14px 14px;
+    max-height: 92vh;
+  }
+
+  .trump-ref-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .trump-ref-header h2 {
+    font-size: 1.15rem;
+  }
 }
 
 /* Overlays */
@@ -1704,10 +2040,17 @@ body {
   margin-left: 4px;
 }
 
-.game-toast .hearts-inline {
-  width: 16px;
-  height: 16px;
+.game-toast .mc-coin-wrap.mc-coin--sm {
   vertical-align: middle;
+}
+
+.shop-item-cost .mc-stakes-row {
+  gap: 2px;
+}
+
+.shop-item-cost .mc-coin-wrap.mc-coin--sm {
+  width: 14px;
+  height: 14px;
 }
 
 .overlay-btn {
@@ -2036,12 +2379,118 @@ body {
     top: 6px;
     right: calc(var(--col-right) + 4px);
     z-index: 26;
-    max-width: calc(var(--col-right) + 32px);
+    max-width: calc(var(--col-right) + 40px);
+  }
+
+  #opponent-fan-area.has-trumps {
+    filter: drop-shadow(0 0 10px rgba(232, 180, 80, 0.35));
+  }
+
+  .opp-trump-stack.has-trumps {
+    animation: opp-trump-hint-pulse 2.8s ease-in-out infinite;
+  }
+
+  @keyframes opp-trump-hint-pulse {
+    0%,
+    100% {
+      filter: drop-shadow(0 0 0 rgba(232, 180, 80, 0));
+    }
+    50% {
+      filter: drop-shadow(0 0 8px rgba(232, 180, 80, 0.45));
+    }
   }
 
   .opp-trump-label {
-    font-size: 0.52rem;
-    padding: 3px 8px;
+    font-size: 0.5rem;
+    padding: 3px 7px;
+    letter-spacing: 0.06em;
+  }
+
+  .opp-trump-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 1.35rem;
+    height: 1.35rem;
+    padding: 0 5px;
+    font-family: var(--font);
+    font-size: 0.72rem;
+    font-weight: 800;
+    color: #fff6d8;
+    background: linear-gradient(180deg, #c89840 0%, #9a6828 100%);
+    border: 2px solid rgba(255, 240, 200, 0.65);
+    border-radius: 999px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+    line-height: 1;
+    flex-shrink: 0;
+  }
+
+  .opp-trump-stack {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto auto;
+    align-items: center;
+    justify-items: end;
+    gap: 4px 6px;
+    max-width: 100%;
+  }
+
+  .opp-trump-label {
+    grid-column: 1;
+    grid-row: 1;
+    justify-self: end;
+  }
+
+  .opp-trump-count {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .opp-fan {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
+  .trump-hand-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 4;
+    padding: 4px 12px;
+    font-family: var(--font);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    color: #f8f2ff;
+    background: linear-gradient(180deg, rgba(120, 90, 170, 0.95) 0%, rgba(80, 55, 130, 0.98) 100%);
+    border: 2px solid rgba(220, 200, 255, 0.55);
+    border-radius: 999px;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.35);
+    white-space: nowrap;
+    pointer-events: none;
+    animation: trump-hand-badge-pulse 2.6s ease-in-out infinite;
+  }
+
+  .trump-hand-badge.hidden {
+    display: none;
+  }
+
+  @keyframes trump-hand-badge-pulse {
+    0%,
+    100% {
+      box-shadow: 0 3px 12px rgba(0, 0, 0, 0.35);
+    }
+    50% {
+      box-shadow: 0 3px 16px rgba(140, 100, 200, 0.55);
+    }
+  }
+
+  #trump-hand-area.has-trumps {
+    padding-top: 28px;
   }
 
   .online-match-badge {
@@ -2192,7 +2641,6 @@ body {
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
   #game-container.turn-pulse {
     animation: none !important;
     border-color: color-mix(

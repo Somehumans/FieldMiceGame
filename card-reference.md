@@ -116,31 +116,61 @@ All reference photos are in the assets folder. Draw your own versions of these i
 
 ---
 
-## Trump Cards (13 total -- no reference photos yet)
+## Trump Cards (see `js/trumpCards.js` for full rules)
+
+**Shop-only (+ / ++):** Two-Up+, Shield+, Trump Switch+, Destroy+, Perfect Draw+, Destroy++ (very rare in shop).  
+**Draw deck:** everything else — random trump draws and most shop stock.
 
 ### Modifier Cards
 
-| Card | Effect                      | Art Direction                                         |
-| ---- | --------------------------- | ----------------------------------------------------- |
-| +1   | Adds 1 to opponent's total  | Rat tossing a single flower at opponent, looking smug |
-| +2   | Adds 2 to opponent's total  | Rat lobbing two flowers like grenades                 |
-| +3   | Adds 3 to opponent's total  | Rat with armful of three flowers, chucking them       |
-| -1   | Subtracts 1 from your total | Rat eating one flower petal, looking content          |
-| -2   | Subtracts 2 from your total | Rat nibbling through two flower stems                 |
-| -3   | Subtracts 3 from your total | Rat in a flower-petal fort, fully protected           |
+| Card | Effect |
+| ---- | ------ |
+| +1 / +2 / +3 | Adds to opponent's total |
+| -1 / -2 / -3 | Subtracts from your total |
 
-### Action Cards
+### Bet & draw
 
-| Card            | Effect                                      | Art Direction                                              |
-| --------------- | ------------------------------------------- | ---------------------------------------------------------- |
-| Love Your Enemy | Swap all face-up cards with opponent        | Two rats swapping flower bouquets, looking confused        |
-| Body Bag        | Remove one opponent face-up card            | Rat dragging a wilted flower away into a hole              |
-| Steal           | Take one opponent face-up card for yourself | Rat in a tiny bandit mask sneaking off with a flower       |
-| Transfer        | Give one of your face-up cards to opponent  | Rat reluctantly pushing a flower toward other side         |
-| Return          | Return one of your face-up cards to deck    | Rat carefully replanting a flower into the ground          |
-| Speed Loader    | Draw 2 cards immediately                    | Rat running full speed carrying two flowers, motion lines  |
-| Double Down     | Stakes x2 this round                        | Two rats back-to-back looking serious on flower pile       |
-| Change          | Change target number from 21                | Rat holding a shapeshifting flower (half daisy, half rose) |
+| Card | Effect |
+| ---- | ------ |
+| One-Up / Two-Up | Opponent loses extra MC if they lose; you draw a trump |
+| Two-Up+ | Return opponent's last face-up card; opponent loses +2 extra MC |
+| Shield / Shield+ | You lose 1 or 2 fewer MC if you lose |
+| Perfect Draw+ | Best card from deck; opponent loses +5 extra MC if they lose |
+
+### Number pulls
+
+| Card | Effect |
+| ---- | ------ |
+| 2–7 Card | Draw that number from the deck if still available |
+
+### Card manipulation
+
+| Card | Effect |
+| ---- | ------ |
+| Love Your Enemy | Opponent draws the best card for them |
+| Body Bag / Steal / Transfer | Destroy, steal, or give a face-up card (pick target) |
+| Remove | Return opponent's last face-up to deck |
+| Return | Return your last face-up to deck |
+| Return (pick) | Return a face-up card you choose |
+| Exchange | Swap last face-up cards with opponent |
+| Speed Loader | Draw 2 number cards |
+
+### Trumps & destruction
+
+| Card | Effect |
+| ---- | ------ |
+| Trump Switch / Trump Switch+ | Discard random trumps, draw 3 or 4 new ones |
+| Destroy / Destroy+ / Destroy++ | Remove opponent trumps; ++ also blocks their trump plays |
+| Harvest | Draw a trump after each trump you play this round |
+
+### Perfect draws & targets
+
+| Card | Effect |
+| ---- | ------ |
+| Perfect Draw / Ultimate Draw | Best card from deck (+2 trumps on Ultimate) |
+| Go for 17 / 24 / 27 | Closest to that number wins the round |
+| Double Down | Double round stakes |
+| Change | Random target (not 21) |
 
 ---
 

@@ -1,7 +1,14 @@
-import { TRUMP_CARD_TYPES, createTrumpDeck, shuffleArray } from './trumpCards.js';
+import {
+  TRUMP_CARD_TYPES,
+  createTrumpDeck,
+  shuffleArray,
+  drawShopTrumpOffer,
+  SHOP_EXCLUSIVE_PLUS_PLUS,
+  getShopTrumpTier
+} from './trumpCards.js';
 import { DEFAULT_GAME_SETTINGS, normalizeSettings } from './gameSettings.js';
 
-/** Default starting hearts (overridden by match settings) */
+/** Default starting Micecoin balance (overridden by match settings) */
 export const STARTING_LIVES = DEFAULT_GAME_SETTINGS.startingLives;
 
 export class GameEngine {
@@ -29,12 +36,14 @@ export class GameEngine {
     this.currentTurn = null;
     this.roundNumber = 0;
     this.targetValue = 21;
+    this.goForTarget = null;
     this.roundStakes = 1;
     this.phase = 'idle';
     this.winner = null;
     this.roundWinner = null;
     this.shop = [];
     this.shopUsedThisTurn = false;
+    this.lastMcTransferred = 0;
   }
 
   freshPlayerState() {
@@ -44,7 +53,15 @@ export class GameEngine {
       modifiers: [],
       trumpCards: [],
       lives: this.startingLives,
-      stayed: false
+      stayed: false,
+      /** Extra MC lost when this player loses the round (One-Up, Two-Up, etc.) */
+      stakeBonus: 0,
+      /** MC saved when this player loses the round (Shield) */
+      stakeReduction: 0,
+      /** Cannot play trump cards this round */
+      trumpBlocked: false,
+      /** Draw a trump after each trump you play this round */
+      harvest: false
     };
   }
 
@@ -81,17 +98,20 @@ export class GameEngine {
   // --- Shop system ---
 
   getTrumpCardCost(trumpId) {
-    const expensive = ['love_your_enemy', 'body_bag', 'steal', 'speed_loader'];
+    if (SHOP_EXCLUSIVE_PLUS_PLUS.includes(trumpId)) return 3;
+    const expensive = [
+      'love_your_enemy', 'body_bag', 'steal', 'speed_loader',
+      'two_up_plus', 'shield_plus', 'trump_switch_plus', 'destroy_plus', 'perfect_draw_plus',
+      'perfect_draw', 'ultimate_draw', 'harvest'
+    ];
     return expensive.includes(trumpId) ? 2 : 1;
   }
 
   generateShop() {
     this.shop = [];
     for (let i = 0; i < 3; i++) {
-      const card = this.drawTrumpCard();
-      if (card) {
-        this.shop.push({ id: card, cost: this.getTrumpCardCost(card), sold: false });
-      }
+      const card = drawShopTrumpOffer();
+      this.shop.push({ id: card, cost: this.getTrumpCardCost(card), sold: false });
     }
     this.emit('shopUpdated', { shop: this.getShopState() });
   }
@@ -101,6 +121,7 @@ export class GameEngine {
       id: item.id,
       cost: item.cost,
       sold: item.sold,
+      shopTier: getShopTrumpTier(item.id),
       name: TRUMP_CARD_TYPES[item.id]?.name || item.id,
       description: TRUMP_CARD_TYPES[item.id]?.description || ''
     }));
@@ -114,7 +135,7 @@ export class GameEngine {
 
     const item = this.shop[shopIndex];
     if (item.sold) return { success: false, error: 'Already sold' };
-    if (this.players[player].lives <= item.cost) return { success: false, error: 'Not enough lives (would die!)' };
+    if (this.players[player].lives <= item.cost) return { success: false, error: 'Not enough MC (would go broke!)' };
 
     this.players[player].lives -= item.cost;
     this.players[player].trumpCards.push(item.id);
@@ -163,15 +184,14 @@ export class GameEngine {
     this.roundNumber++;
     this.createDeck();
     this.targetValue = 21;
+    this.goForTarget = null;
     this.roundStakes = this.roundNumber;
     this.roundWinner = null;
 
     for (const role of ['host', 'guest']) {
-      this.players[role].faceDown = null;
-      this.players[role].faceUp = [];
-      this.players[role].modifiers = [];
-      this.players[role].stayed = false;
-      this.players[role].trumpCards = [];
+      const p = this.freshPlayerState();
+      p.lives = this.players[role].lives;
+      this.players[role] = p;
     }
 
     this.players.host.faceDown = this.drawCard();
@@ -273,14 +293,26 @@ export class GameEngine {
     const trumpType = TRUMP_CARD_TYPES[trumpId];
     if (!trumpType) return { success: false, error: 'Unknown trump card type' };
 
+    if (this.players[player].trumpBlocked) {
+      return { success: false, error: 'Cannot play trump cards this round' };
+    }
+
     if (trumpType.needsTarget && targetIndex === -1) {
       return { success: false, error: 'This card needs a target', needsTarget: true, targetType: trumpType.targetType };
     }
 
-    const result = trumpType.apply(this, player, targetIndex);
-    if (result.success === false) return result;
-
     trumpCards.splice(trumpIndex, 1);
+
+    const result = trumpType.apply(this, player, targetIndex);
+    if (result.success === false) {
+      trumpCards.splice(trumpIndex, 0, trumpId);
+      return result;
+    }
+
+    if (this.players[player].harvest) {
+      const bonus = this.drawTrumpCard();
+      if (bonus) this.players[player].trumpCards.push(bonus);
+    }
 
     this.emit('trumpCardUsed', {
       player,
@@ -324,7 +356,7 @@ export class GameEngine {
   }
 
   resolveRound(hostTotal, guestTotal) {
-    const target = this.targetValue;
+    const target = this.goForTarget ?? this.targetValue;
     const hostBust = hostTotal > target;
     const guestBust = guestTotal > target;
 
@@ -342,11 +374,20 @@ export class GameEngine {
       else this.roundWinner = 'draw';
     }
 
+    let mcTransferred = 0;
     if (this.roundWinner !== 'draw') {
       const loser = this.roundWinner === 'host' ? 'guest' : 'host';
-      this.players[loser].lives = Math.max(0, this.players[loser].lives - this.roundStakes);
+      const winner = this.roundWinner;
+      const ls = this.players[loser];
+      const ws = this.players[winner];
+      let damage = this.roundStakes + (ls.stakeBonus || 0);
+      damage = Math.max(0, damage - (ls.stakeReduction || 0));
+      mcTransferred = damage;
+      ls.lives = Math.max(0, ls.lives - damage);
+      ws.lives += damage;
     }
 
+    this.lastMcTransferred = mcTransferred;
     this.phase = 'roundEnd';
 
     this.emit('roundEnd', {
@@ -355,7 +396,8 @@ export class GameEngine {
       hostTotal,
       guestTotal,
       target,
-      livesLost: this.roundWinner === 'draw' ? 0 : this.roundStakes,
+      mcTransferred,
+      livesLost: mcTransferred,
       hostLives: this.players.host.lives,
       guestLives: this.players.guest.lives
     });
@@ -382,7 +424,9 @@ export class GameEngine {
       phase: this.phase,
       roundNumber: this.roundNumber,
       maxLives: this.startingLives,
-      targetValue: this.targetValue,
+      targetValue: this.goForTarget ?? this.targetValue,
+      baseTargetValue: this.targetValue,
+      goForTarget: this.goForTarget,
       roundStakes: this.roundStakes,
       currentTurn: this.currentTurn,
       roundWinner: this.roundWinner,
@@ -416,7 +460,9 @@ export class GameEngine {
     return {
       phase: this.phase,
       roundNumber: this.roundNumber,
-      targetValue: this.targetValue,
+      targetValue: this.goForTarget ?? this.targetValue,
+      baseTargetValue: this.targetValue,
+      goForTarget: this.goForTarget,
       roundStakes: this.roundStakes,
       currentTurn: this.currentTurn,
       roundWinner: this.roundWinner,
@@ -435,7 +481,8 @@ export class GameEngine {
   loadFullState(state) {
     this.phase = state.phase;
     this.roundNumber = state.roundNumber;
-    this.targetValue = state.targetValue;
+    this.goForTarget = state.goForTarget ?? null;
+    this.targetValue = state.baseTargetValue ?? state.targetValue ?? 21;
     this.roundStakes = state.roundStakes;
     this.currentTurn = state.currentTurn;
     this.roundWinner = state.roundWinner;

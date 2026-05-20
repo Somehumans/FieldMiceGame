@@ -1,6 +1,6 @@
 import { MusicPlayer } from './music.js';
-import { GameEngine, STARTING_LIVES } from './engine.js';
-import { stakesHeartsHtml } from './renderer.js';
+import { GameEngine } from './engine.js';
+import { stakesMcHtml } from './renderer.js';
 import { Renderer } from './renderer.js';
 import { TRUMP_CARD_TYPES } from './trumpCards.js';
 import { Tutorial, GAME_TUTORIAL_STEPS } from './tutorial.js';
@@ -17,6 +17,7 @@ import { loadStoredUsername } from './username.js';
 import { resolveOnlineParams, clearOnlineSession, saveOnlineSession } from './onlineSession.js';
 import { initUiSounds, bindButtonClickSounds } from './uiSounds.js';
 import { initMobileWarning } from './mobileWarning.js';
+import { initTrumpReference } from './trumpCards.js';
 
 class Game {
   static SFX = {
@@ -478,7 +479,7 @@ class Game {
       void this.playSfx('shopPurchase');
       if (data.player !== this.playerRole) {
         this.renderer.showGameToastHtml(
-          `<span class="toast-opp-event">Opponent bought a trump from the shop!</span> ${stakesHeartsHtml(data.cost)}`,
+          `<span class="toast-opp-event">Opponent bought a trump from the shop!</span> ${stakesMcHtml(data.cost)}`,
           3200
         );
       }
@@ -720,12 +721,13 @@ class Game {
         yourTotal: myTotal,
         oppTotal,
         target: this.engine.targetValue,
-        livesLost: this.engine.roundStakes,
+        mcTransferred: this.engine.lastMcTransferred ?? this.engine.roundStakes,
+        livesLost: this.engine.lastMcTransferred ?? this.engine.roundStakes,
         stakes: this.engine.roundStakes,
         roundNumber: this.engine.roundNumber,
         yourLives: this.engine.players[this.playerRole].lives,
         oppLives: this.engine.players[oppRole].lives,
-        maxLives: STARTING_LIVES,
+        maxLives: this.engine.startingLives,
       };
 
       const showDelay = this.engine.phase === 'gameOver' ? 1000 : 800;
@@ -1168,7 +1170,10 @@ class Game {
       if (id === 'minus_2' && diff >= 2) return i;
       if (id === 'minus_1' && diff >= 1) return i;
       if (id === 'return_card' && this.engine.players[aiRole].faceUp.length > 0) return i;
+      if (id === 'return_last' && this.engine.players[aiRole].faceUp.length > 0) return i;
+      if (id === 'perfect_draw' || id === 'ultimate_draw') return i;
       if (id === 'love_your_enemy') return i;
+      if (id === 'shield' || id === 'shield_plus') return i;
     }
     return -1;
   }
@@ -1203,5 +1208,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initUiSounds(() => musicPlayer.getSfxVolume());
   bindButtonClickSounds();
   initMobileWarning();
+  initTrumpReference();
   game.init();
 });

@@ -6,6 +6,7 @@ import { loadStoredUsername, saveStoredUsername } from './username.js';
 import { saveOnlineSession, clearOnlineSession } from './onlineSession.js';
 import { initUiSounds, bindButtonClickSounds, navigateWithButtonClick } from './uiSounds.js';
 import { initMobileWarning } from './mobileWarning.js';
+import { initTrumpReference } from './trumpCards.js';
 
 class Lobby {
   constructor() {
@@ -272,5 +273,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initUiSounds(() => musicPlayer.getSfxVolume());
   bindButtonClickSounds();
   initMobileWarning();
+  initTrumpReference();
   lobby.init();
 });

@@ -1,34 +1,23 @@
 import { TRUMP_CARD_TYPES } from './trumpCards.js';
+import { mcCoinHtml, syncMcCoinAnimations } from './micecoin.js';
 
-import { STARTING_LIVES } from './engine.js';
-
-const LIFE_HEART_SVG = `<svg class="life-heart-svg" viewBox="0 0 24 24" focusable="false" aria-hidden="true"><path fill="currentColor" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>`;
-
-/** Row of hearts for stakes / costs (filled only). */
-export function stakesHeartsHtml(count) {
-  const n = Math.max(0, Math.min(STARTING_LIVES, count));
-  const hearts = Array.from({ length: n }, () =>
-    `<span class="hearts-inline hearts-inline--stakes">${LIFE_HEART_SVG}</span>`
-  ).join('');
-  return `<span class="hearts-inline-row">${hearts}</span>`;
+/** Row of coins for stakes / costs. */
+export function stakesMcHtml(count) {
+  const n = Math.max(0, count);
+  if (n === 0) return `<span class="mc-stakes-row"><span class="mc-stakes-label">0 MC</span></span>`;
+  const maxIcons = 8;
+  const coins = Array.from({ length: Math.min(n, maxIcons) }, () => mcCoinHtml('mc-coin--sm')).join('');
+  const overflow = n > maxIcons ? `<span class="mc-stakes-overflow">+${n - maxIcons}</span>` : '';
+  return `<span class="mc-stakes-row">${coins}${overflow}<span class="mc-stakes-label">${n} MC</span></span>`;
 }
 
-/** Row of hearts showing current lives (filled + empty slots). */
-export function livesHeartsHtml(current, max = STARTING_LIVES) {
-  const hearts = Array.from({ length: max }, (_, i) => {
-    const cls = i < current ? 'hearts-inline--full' : 'hearts-inline--empty';
-    return `<span class="hearts-inline ${cls}">${LIFE_HEART_SVG}</span>`;
-  }).join('');
-  return `<span class="hearts-inline-row">${hearts}</span>`;
+/** Balance display with animated coin + amount. */
+export function mcBalanceHtml(amount, { spin = true } = {}) {
+  return `<span class="mc-balance">${mcCoinHtml('mc-coin--balance', spin)}<span class="mc-amount">${amount}</span><span class="mc-label">MC</span></span>`;
 }
 
-/** Shop prices are paid in lives (hearts), not generic dots. */
-function shopCostHeartsHtml(cost) {
-  const n = Math.max(0, Math.min(STARTING_LIVES, cost));
-  const hearts = Array.from({ length: n }, () =>
-    `<span class="shop-cost-heart">${LIFE_HEART_SVG}</span>`
-  ).join('');
-  return `<span class="shop-cost-hearts">${hearts}</span>`;
+function shopCostMcHtml(cost) {
+  return stakesMcHtml(cost);
 }
 
 export class Renderer {
@@ -44,6 +33,8 @@ export class Renderer {
       opponentCards: document.getElementById('opponent-cards'),
       playerCards: document.getElementById('player-cards'),
       trumpHand: document.getElementById('trump-hand'),
+      trumpHandBadge: document.getElementById('trump-hand-badge'),
+      opponentTrumpStack: document.querySelector('.opp-trump-stack'),
       opponentTrumpFan: document.getElementById('opponent-trump-fan'),
       opponentLives: document.getElementById('opponent-lives'),
       playerLives: document.getElementById('player-lives'),
@@ -105,9 +96,8 @@ export class Renderer {
     this.renderPlayerCards(state.you);
     this.renderTrumpHand(state.you.trumpCards);
     this.renderOpponentTrumpFan(state.opponent.trumpCardCount);
-    const maxLives = state.maxLives ?? STARTING_LIVES;
-    this.renderLives('opponent', state.opponent.lives, maxLives);
-    this.renderLives('player', state.you.lives, maxLives);
+    this.renderLives('opponent', state.opponent.lives);
+    this.renderLives('player', state.you.lives);
     this.renderScore('opponent', state.opponent, state.targetValue);
     this.renderScore('player', state.you, state.targetValue);
     this.renderRoundStakes(state.roundNumber, state.roundStakes, state.phase);
@@ -116,6 +106,7 @@ export class Renderer {
     this.updateShopButton(isYourTurn, state, showShopIcon);
     this.el.deckCount.textContent = state.deckCount;
     this.fitCardRows();
+    syncMcCoinAnimations(this.el.gameContainer || document);
   }
 
   /** Scale / overlap center hand rows so cards stay inside the table at any width. */
@@ -192,7 +183,22 @@ export class Renderer {
 
   renderOpponentTrumpFan(count) {
     const label = document.querySelector('.opp-trump-label');
-    if (label) label.classList.toggle('hidden', count === 0);
+    const stack = this.el.opponentTrumpStack;
+    const area = document.getElementById('opponent-fan-area');
+
+    if (label) {
+      label.classList.toggle('hidden', count === 0);
+      label.textContent = count === 1 ? 'Enemy trump' : 'Enemy trumps';
+    }
+    stack?.classList.toggle('has-trumps', count > 0);
+    area?.classList.toggle('has-trumps', count > 0);
+    area?.setAttribute('aria-label', count > 0 ? `Opponent has ${count} trump card${count === 1 ? '' : 's'}` : '');
+
+    const countEl = stack?.querySelector('.opp-trump-count');
+    if (countEl) {
+      countEl.textContent = String(count);
+      countEl.classList.toggle('hidden', count === 0);
+    }
 
     this.el.opponentTrumpFan.innerHTML = '';
     for (let i = 0; i < count; i++) {
@@ -336,31 +342,30 @@ export class Renderer {
     trumpCards.forEach((id, i) => {
       this.el.trumpHand.appendChild(this.createTrumpInHand(id, i));
     });
+
+    const badge = this.el.trumpHandBadge;
+    const area = document.getElementById('trump-hand-area');
+    const n = trumpCards.length;
+    if (badge) {
+      badge.classList.toggle('hidden', n === 0);
+      badge.textContent = n ? `🃏 Your trump${n === 1 ? '' : 's'} (${n})` : '';
+    }
+    area?.classList.toggle('has-trumps', n > 0);
   }
 
-  // --- Lives ---
+  // --- Micecoin balance ---
 
-  renderLives(side, lives, maxLives = STARTING_LIVES) {
+  renderLives(side, mc) {
     const container = side === 'opponent' ? this.el.opponentLives : this.el.playerLives;
-    if (container.children.length !== maxLives) {
-      container.innerHTML = '';
-      for (let i = 0; i < maxLives; i++) {
-        const heart = document.createElement('div');
-        heart.className = 'life-heart';
-        heart.innerHTML = LIFE_HEART_SVG;
-        container.appendChild(heart);
-      }
-    }
-    for (let i = 0; i < maxLives; i++) {
-      container.children[i].className = i < lives ? 'life-heart active' : 'life-heart lost';
-    }
+    if (!container) return;
+    container.innerHTML = mcBalanceHtml(mc);
+    container.classList.add('mc-balance-wrap');
   }
 
-  animateLivesLost(side, fromLives, toLives) {
+  animateLivesLost(side) {
     const container = side === 'opponent' ? this.el.opponentLives : this.el.playerLives;
-    for (let i = toLives; i < fromLives; i++) {
-      if (container.children[i]) container.children[i].className = 'life-heart losing';
-    }
+    container?.classList.add('mc-balance--losing');
+    setTimeout(() => container?.classList.remove('mc-balance--losing'), 550);
   }
 
   // --- Score ---
@@ -377,7 +382,7 @@ export class Renderer {
       this.el.roundNumber.textContent = String(roundNumber);
     }
     if (this.el.roundStakesHearts) {
-      this.el.roundStakesHearts.innerHTML = stakesHeartsHtml(roundStakes ?? roundNumber);
+      this.el.roundStakesHearts.innerHTML = stakesMcHtml(roundStakes ?? roundNumber);
     }
   }
 
@@ -480,7 +485,6 @@ export class Renderer {
 
     const isWinner = data.winner === perspective;
     const isDraw = data.winner === 'draw';
-    const maxLives = data.maxLives ?? STARTING_LIVES;
     const margin = Math.abs(data.yourTotal - data.oppTotal);
 
     let mood = 'lose';
@@ -489,7 +493,7 @@ export class Renderer {
     if (isDraw) {
       mood = 'draw';
       outcome = 'Dead heat!';
-      marginText = 'A perfect tie — no hearts lost';
+      marginText = 'A perfect tie — no MC exchanged';
     } else if (isWinner) {
       mood = 'win';
       outcome = "You got 'em!";
@@ -501,9 +505,10 @@ export class Renderer {
     const yourTotalEl = document.getElementById('round-end-your-total');
     const oppTotalEl = document.getElementById('round-end-opp-total');
     const targetEl = document.getElementById('round-end-target');
-    const heartsEl = document.getElementById('round-end-hearts');
+    const mcEl = document.getElementById('round-end-hearts');
     const stakesEl = document.getElementById('round-end-stakes');
     const roundNumEl = document.getElementById('round-end-round-num');
+    const mcAmount = data.mcTransferred ?? data.stakes ?? 0;
 
     if (outcomeEl) {
       outcomeEl.textContent = outcome;
@@ -513,24 +518,24 @@ export class Renderer {
     if (yourTotalEl) yourTotalEl.textContent = String(data.yourTotal);
     if (oppTotalEl) oppTotalEl.textContent = String(data.oppTotal);
     if (targetEl) targetEl.textContent = `Target was ${data.target}`;
-    if (heartsEl) {
-      heartsEl.innerHTML = `
+    if (mcEl) {
+      mcEl.innerHTML = `
         <div class="round-end-hearts-row">
-          <span class="round-end-hearts-label">Your hearts</span>
-          ${livesHeartsHtml(data.yourLives, maxLives)}
+          <span class="round-end-hearts-label">Your MC</span>
+          ${mcBalanceHtml(data.yourLives, { spin: false })}
         </div>
         <div class="round-end-hearts-row">
-          <span class="round-end-hearts-label">Their hearts</span>
-          ${livesHeartsHtml(data.oppLives, maxLives)}
+          <span class="round-end-hearts-label">Their MC</span>
+          ${mcBalanceHtml(data.oppLives, { spin: false })}
         </div>`;
     }
     if (stakesEl) {
       const paid = isDraw
         ? 'No bet paid'
         : (isWinner
-          ? `They pay ${data.stakes} heart${data.stakes === 1 ? '' : 's'}`
-          : `You pay ${data.stakes} heart${data.stakes === 1 ? '' : 's'}`);
-      stakesEl.innerHTML = `${paid} · Next bet: ${stakesHeartsHtml(data.roundNumber + 1)}`;
+          ? `You win +${mcAmount} MC`
+          : `You pay ${mcAmount} MC`);
+      stakesEl.innerHTML = `${paid} · Next bet: ${stakesMcHtml(data.roundNumber + 1)}`;
     }
     if (roundNumEl) roundNumEl.textContent = String(data.roundNumber + 1);
 
@@ -606,7 +611,7 @@ export class Renderer {
     const subtitle = document.querySelector('.shop-subtitle');
     if (subtitle) {
       subtitle.innerHTML =
-        `Spend hearts to buy trumps — this round's bet is ${stakesHeartsHtml(roundStakes)}`;
+        `Spend MC to buy trumps — <strong>+</strong> and <strong>++</strong> cards are shop-only. This round's bet is ${stakesMcHtml(roundStakes)}`;
     }
 
     const container = this.el.shopOverlayCards;
@@ -614,17 +619,27 @@ export class Renderer {
     shop.forEach((item, i) => {
       const el = document.createElement('div');
       const cantAfford = !item.sold && playerLives <= item.cost;
-      el.className = `shop-item ${item.sold ? 'sold' : ''} ${cantAfford ? 'unaffordable' : ''}`;
+      const tier = item.shopTier || 'normal';
+      el.className = `shop-item shop-item--${tier} ${item.sold ? 'sold' : ''} ${cantAfford ? 'unaffordable' : ''}`;
+      const tierBadge = tier === 'plusplus'
+        ? '<span class="shop-item-tier shop-item-tier--pp">++ rare</span>'
+        : tier === 'plus'
+          ? '<span class="shop-item-tier shop-item-tier--plus">+ shop</span>'
+          : '';
       el.innerHTML = `
-        <div class="shop-item-name">${item.name}</div>
+        <div class="shop-item-head">
+          <div class="shop-item-name">${item.name}</div>
+          ${tierBadge}
+        </div>
         <div class="shop-item-desc">${item.description}</div>
-        <div class="shop-item-cost">${shopCostHeartsHtml(item.cost)}</div>
+        <div class="shop-item-cost">${shopCostMcHtml(item.cost)}</div>
       `;
       if (!item.sold && !cantAfford) el.addEventListener('click', () => onBuy(i));
       container.appendChild(el);
     });
     this.el.shopCloseBtn.onclick = onSkip;
     this.el.shopOverlay.classList.remove('hidden');
+    syncMcCoinAnimations(this.el.shopOverlay);
   }
 
   hideShopOverlay() {
@@ -643,6 +658,7 @@ export class Renderer {
     toast.innerHTML = html;
     toast.classList.remove('hidden');
     toast.classList.add('game-toast--visible');
+    syncMcCoinAnimations(toast);
 
     this._toastTimer = setTimeout(() => {
       toast.classList.remove('game-toast--visible');
